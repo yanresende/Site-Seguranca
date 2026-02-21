@@ -29,7 +29,7 @@ export default function Prontuario() {
           </button>
           <div className="w-16 h-16 rounded-2xl bg-red-600 flex items-center justify-center text-white text-2xl font-bold">
             <img
-              src="../../public/img/homem-perfil.png"
+              src="/img/homem-perfil.png"
               alt="Perfil do Suspeito"
               className="w-16 h-16 rounded-2xl bg-red-600 flex items-center justify-center text-white text-2xl font-bold"
             />
@@ -110,7 +110,7 @@ export default function Prontuario() {
               <h3 className="font-bold mb-4">Foto do Suspeito</h3>
               <div className="w-64 h-64 rounded-2xl bg-red-600 flex items-center justify-center text-white text-2xl font-bold">
                 <img
-                  src="../../public/img/homem-perfil.png"
+                  src="/img/homem-perfil.png"
                   alt="Perfil do Suspeito"
                   className="w-64 h-64 rounded-2xl object-cover"
                 />

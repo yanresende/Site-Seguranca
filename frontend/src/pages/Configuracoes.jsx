@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User, Building2, Bell, Shield, Save, Camera } from 'lucide-react';
+import { User, Building, Bell, Shield, Save, Camera } from 'lucide-react';
 
 export default function Configuracoes() {
   const [activeTab, setActiveTab] = useState('perfil');
@@ -8,14 +8,14 @@ export default function Configuracoes() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-800">Configurações</h1>
-        <p className="text-gray-500">Gerencie sua conta e as preferências do sistema.</p>
+        <p className="text-gray-500">Gerencie seu perfil de acesso e preferências.</p>
       </div>
 
       <div className="flex flex-col md:flex-row gap-8">
         {/* MENU LATERAL DE CONFIGURAÇÕES */}
         <aside className="w-full md:w-64 space-y-1">
           <SettingsTab active={activeTab === 'perfil'} onClick={() => setActiveTab('perfil')} icon={<User size={18}/>} label="Meu Perfil" />
-          <SettingsTab active={activeTab === 'clinica'} onClick={() => setActiveTab('clinica')} icon={<Building2 size={18}/>} label="Dados da Clínica" />
+          <SettingsTab active={activeTab === 'clinica'} onClick={() => setActiveTab('clinica')} icon={<Building size={18}/>} label="Dados da Unidade" />
           <SettingsTab active={activeTab === 'notificacoes'} onClick={() => setActiveTab('notificacoes')} icon={<Bell size={18}/>} label="Notificações" />
           <SettingsTab active={activeTab === 'seguranca'} onClick={() => setActiveTab('seguranca')} icon={<Shield size={18}/>} label="Segurança" />
         </aside>
@@ -24,7 +24,7 @@ export default function Configuracoes() {
         <div className="flex-1 bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
           <div className="p-8">
             {activeTab === 'perfil' && <PerfilSection />}
-            {activeTab === 'clinica' && <div className="text-gray-500 italic">Configurações da clínica em breve...</div>}
+            {activeTab === 'clinica' && <div className="text-gray-500 italic">Configurações da unidade em breve...</div>}
             {activeTab === 'notificacoes' && <div className="text-gray-500 italic">Preferências de notificações em breve...</div>}
             {activeTab === 'seguranca' && <div className="text-gray-500 italic">Troca de senha em breve...</div>}
           </div>
@@ -77,22 +77,22 @@ function PerfilSection() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-1">
           <label className="text-sm font-medium text-gray-700">Nome Completo</label>
-          <input type="text" className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500" defaultValue="Dr. Yan Resende" />
+          <input type="text" className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500" defaultValue="Agente Yan Resende" />
         </div>
         <div className="space-y-1">
-          <label className="text-sm font-medium text-gray-700">CRM</label>
-          <input type="text" className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500" defaultValue="123456-SP" />
+          <label className="text-sm font-medium text-gray-700">Matrícula</label>
+          <input type="text" className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500" defaultValue="SEC-8829" />
         </div>
         <div className="space-y-1">
           <label className="text-sm font-medium text-gray-700">E-mail</label>
-          <input type="email" className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500" defaultValue="yan@navidata.com" />
+          <input type="email" className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500" defaultValue="yan@sentinela.com" />
         </div>
         <div className="space-y-1">
-          <label className="text-sm font-medium text-gray-700">Especialidade Principal</label>
+          <label className="text-sm font-medium text-gray-700">Cargo / Posto</label>
           <select className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-            <option>Cardiologia</option>
-            <option>Ortopedia</option>
-            <option>Clínica Geral</option>
+            <option>Chefe de Segurança</option>
+            <option>Monitoramento</option>
+            <option>Fiscal de Loja</option>
           </select>
         </div>
       </div>

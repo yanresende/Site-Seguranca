@@ -1,4 +1,4 @@
-import { Stethoscope } from "lucide-react";
+import { Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
@@ -15,26 +15,26 @@ export default function Login() {
       <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-10 space-y-8 border border-gray-100">
         <div className="text-center">
           <div className="inline-flex p-4 bg-blue-600 rounded-2xl text-white mb-4">
-            <Stethoscope size={32} />
+            <Shield size={32} />
           </div>
           <h2 className="text-3xl font-extrabold text-gray-900 italic">
-            NaviData
+            Sentinela
           </h2>
           <p className="mt-2 text-sm text-gray-500">
-            Acesse sua conta para gerenciar a clínica
+            Sistema de Segurança
           </p>
         </div>
 
         <form className="space-y-6" onSubmit={handleLogin}>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              E-mail profissional
+              ID Funcional / E-mail
             </label>
             <input
               type="email"
               required
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-              placeholder="exemplo@navidata.com"
+              placeholder="agente.silva@sentinela.com"
             />
           </div>
 
@@ -75,7 +75,7 @@ export default function Login() {
         </form>
 
         <p className="text-center text-xs text-gray-400 mt-8">
-          &copy; 2026 Navi Health System. Todos os direitos reservados.
+          &copy; 2026 Sentinela Security. Todos os direitos reservados.
         </p>
       </div>
     </div>

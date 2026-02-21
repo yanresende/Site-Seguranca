@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { 
-  User, FileText, Activity, ClipboardList, 
-  Clock, Plus, ArrowLeft, Download 
+  User, FileWarning, Siren, ShieldAlert, 
+  Clock, Plus, ArrowLeft, Download, Camera 
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,29 +17,29 @@ export default function Prontuario() {
           <button onClick={() => navigate('/pacientes')} className="p-2 hover:bg-gray-100 rounded-full transition">
             <ArrowLeft size={20} className="text-gray-500" />
           </button>
-          <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center text-white text-2xl font-bold">
+          <div className="w-16 h-16 rounded-2xl bg-red-600 flex items-center justify-center text-white text-2xl font-bold">
             MS
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">Marcos Silva</h1>
-            <p className="text-sm text-gray-500">CPF: 123.456.789-00 • 34 anos • Sangue A+</p>
+            <h1 className="text-2xl font-bold text-gray-800">Marcos Silva (Vulgo: "Ligeiro")</h1>
+            <p className="text-sm text-gray-500">CPF: 123.456.789-00 • 34 anos • Reincidente</p>
           </div>
         </div>
         <div className="flex gap-2">
           <button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium hover:bg-gray-50 transition">
-            <Download size={18} /> Exportar PDF
+            <Download size={18} /> Exportar B.O.
           </button>
           <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-100">
-            <Plus size={18} /> Nova Evolução
+            <Plus size={18} /> Nova Ocorrência
           </button>
         </div>
       </div>
 
       {/* NAVEGAÇÃO POR ABAS */}
       <div className="flex gap-4 border-b border-gray-200">
-        <TabButton id="historico" label="Histórico Clínica" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Clock size={18}/>} />
+        <TabButton id="historico" label="Histórico de Furtos" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Clock size={18}/>} />
         <TabButton id="dados" label="Dados Gerais" activeTab={activeTab} setActiveTab={setActiveTab} icon={<User size={18}/>} />
-        <TabButton id="exames" label="Exames" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Activity size={18}/>} />
+        <TabButton id="exames" label="Evidências/Fotos" activeTab={activeTab} setActiveTab={setActiveTab} icon={<Camera size={18}/>} />
       </div>
 
       {/* CONTEÚDO DAS ABAS */}
@@ -51,13 +51,13 @@ export default function Prontuario() {
             <>
               <EvolucaoCard 
                 date="20 Fev 2026" 
-                doctor="Dr. Resende" 
-                text="Paciente apresenta melhora no quadro de dor lombar. Mantida a medicação anterior e recomendado fisioterapia 2x por semana."
+                doctor="Agente Resende" 
+                text="Indivíduo flagrado no setor de eletrônicos colocando um fone de ouvido no bolso. Abordado na saída. Item recuperado (Valor R$ 150,00). Polícia não acionada."
               />
               <EvolucaoCard 
                 date="10 Jan 2026" 
-                doctor="Dr. Resende" 
-                text="Primeira consulta. Queixa de dores intensas na região lombar ao carregar peso. Solicitado Ressonância Magnética."
+                doctor="Agente Resende" 
+                text="Primeira ocorrência. Tentativa de levar duas garrafas de whisky. Alegou esquecimento. Liberado após devolução."
               />
             </>
           )}
@@ -73,14 +73,14 @@ export default function Prontuario() {
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
             <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-              <ClipboardList size={18} className="text-blue-600" /> Alertas Médicos
+              <ShieldAlert size={18} className="text-red-600" /> Alertas de Segurança
             </h3>
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-2 rounded-lg font-medium">
-                • Alérgico a Dipirona
+                • Agressivo na abordagem
               </li>
               <li className="flex items-center gap-2 text-sm text-orange-600 bg-orange-50 p-2 rounded-lg font-medium">
-                • Hipertenso
+                • Anda em grupo
               </li>
             </ul>
           </div>

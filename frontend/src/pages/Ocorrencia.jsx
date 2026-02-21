@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Plus, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, Siren } from 'lucide-react';
 
 export default function Agenda() {
   const [dataSelecionada, setDataSelecionada] = useState(new Date());
@@ -24,7 +24,7 @@ export default function Agenda() {
       {/* CABEÇALHO DA AGENDA */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
         <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold text-gray-800">Fevereiro 2026</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Calendário de Ocorrências</h1>
           <div className="flex bg-gray-50 rounded-lg p-1">
             <button className="p-2 hover:bg-white hover:shadow-sm rounded-md transition"><ChevronLeft size={20}/></button>
             <button className="p-2 hover:bg-white hover:shadow-sm rounded-md transition"><ChevronRight size={20}/></button>
@@ -33,7 +33,7 @@ export default function Agenda() {
         </div>
         
         <button className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-100">
-          <Plus size={20} /> Nova Consulta
+          <Plus size={20} /> Registrar Ocorrência
         </button>
       </div>
 
@@ -71,18 +71,18 @@ export default function Agenda() {
                 <AppointmentCard 
                   top="top-[160px]" 
                   height="h-32" 
-                  name="Marcos Silva" 
-                  type="Retorno" 
-                  color="bg-blue-100 border-blue-200 text-blue-700" 
+                  name="Furto - Eletrônicos" 
+                  type="Suspeito Detido" 
+                  color="bg-red-100 border-red-200 text-red-700" 
                 />
               )}
               {dia === 5 && (
                 <AppointmentCard 
                   top="top-[320px]" 
                   height="h-20" 
-                  name="Ana Souza" 
-                  type="Check-up" 
-                  color="bg-green-100 border-green-200 text-green-700" 
+                  name="Tumulto na Loja" 
+                  type="Resolvido" 
+                  color="bg-orange-100 border-orange-200 text-orange-700" 
                 />
               )}
             </div>
@@ -97,7 +97,7 @@ function AppointmentCard({ top, height, name, type, color }) {
   return (
     <div className={`absolute left-1 right-1 ${top} ${height} ${color} border rounded-lg p-2 text-xs shadow-sm overflow-hidden z-10 hover:brightness-95 cursor-pointer`}>
       <p className="font-bold truncate">{name}</p>
-      <p className="opacity-80 flex items-center gap-1"><Clock size={10}/> {type}</p>
+      <p className="opacity-80 flex items-center gap-1"><Siren size={10}/> {type}</p>
     </div>
   );
 }

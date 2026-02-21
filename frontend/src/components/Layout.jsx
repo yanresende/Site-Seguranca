@@ -14,9 +14,9 @@ export default function Layout() {
       <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
         <div className="p-6">
           <h1 className="text-2xl font-bold text-blue-600 tracking-tight">
-            Navi
+            Sentinela
           </h1>
-          <p className="text-xs text-gray-400">Sistema De Apoio</p>
+          <p className="text-xs text-gray-400">Sistema De Segurança Inteligente</p>
         </div>
 
         <nav className="flex-1 px-4 space-y-2">
@@ -27,13 +27,13 @@ export default function Layout() {
           />
           <SidebarItem
             icon={<Users size={20} />}
-            label="Pacientes"
-            to="/pacientes"
+            label="Suspeitos"
+            to="/suspeitos"
           />
           <SidebarItem
             icon={<Calendar size={20} />}
-            label="Agenda"
-            to="/agenda"
+            label="Ocorrências"
+            to="/ocorrencia"
           />
           <SidebarItem
             icon={<Settings size={20} />}

@@ -7,7 +7,7 @@ export default function Dashboard() {
       {/* 1. Título e Boas-vindas */}
       <div>
         <h1 className="text-2xl font-bold text-gray-800">Painel de Segurança</h1>
-        <p className="text-gray-500">Bem Vindo de Volta Yan</p>
+        <p className="text-gray-500">Bem Vindo de Volta Ana</p>
       </div>
 
       {/* 2. Grid de Cards */}

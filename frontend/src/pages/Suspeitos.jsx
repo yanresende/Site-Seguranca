@@ -52,19 +52,19 @@ export default function Suspeitos() {
             <tbody className="divide-y divide-gray-50">
               <SuspeitoRow 
                 name="Marcos Oliveira" 
-                email="Furto de Bebidas" 
+                email="Furto de Cabo" 
                 cpf="123.456.789-00" 
                 lastVisit="20/02/2026" 
               />
               <SuspeitoRow 
                 name="Juliana Ferreira" 
-                email="Tentativa de Fraude" 
+                email="Tentativa de Roubo" 
                 cpf="987.654.321-11" 
                 lastVisit="15/01/2026" 
               />
               <SuspeitoRow 
                 name="Ricardo Mendes" 
-                email="Agressão Verbal" 
+                email="Suspeito com Objetos Suspeitos" 
                 cpf="456.123.789-22" 
                 lastVisit="02/02/2026" 
               />
@@ -97,7 +97,7 @@ function SuspeitoRow({ name, email, cpf, lastVisit }) {
       <td className="px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-red-50 text-red-600 flex items-center justify-center font-bold">
-            <UserX size={20} />
+            <img src="../../public/img/homem-perfil.png" alt="Perfil do Suspeito" className="w-8 h-8 rounded-full" />
           </div>
           <div>
             <div className="font-bold text-gray-700">{name}</div>

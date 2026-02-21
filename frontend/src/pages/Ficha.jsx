@@ -11,10 +11,10 @@ export default function Prontuario() {
 
   return (
     <div className="space-y-6">
-      {/* CABEÇALHO DO PACIENTE */}
+      {/* CABEÇALHO DO Suspeito */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
         <div className="flex items-center gap-4">
-          <button onClick={() => navigate('/pacientes')} className="p-2 hover:bg-gray-100 rounded-full transition">
+          <button onClick={() => navigate('/suspeitos')} className="p-2 hover:bg-gray-100 rounded-full transition">
             <ArrowLeft size={20} className="text-gray-500" />
           </button>
           <div className="w-16 h-16 rounded-2xl bg-red-600 flex items-center justify-center text-white text-2xl font-bold">
@@ -52,12 +52,12 @@ export default function Prontuario() {
               <EvolucaoCard 
                 date="20 Fev 2026" 
                 doctor="Agente Resende" 
-                text="Indivíduo flagrado no setor de eletrônicos colocando um fone de ouvido no bolso. Abordado na saída. Item recuperado (Valor R$ 150,00). Polícia não acionada."
+                text="Indivíduo flagrado cortando cabo de internet no poste. Abordado no local. Polícia não acionada."
               />
               <EvolucaoCard 
                 date="10 Jan 2026" 
                 doctor="Agente Resende" 
-                text="Primeira ocorrência. Tentativa de levar duas garrafas de whisky. Alegou esquecimento. Liberado após devolução."
+                text="Primeira ocorrência. Tentativa de levar 5m de cabo. Alegou que era dele. Liberado após devolução."
               />
             </>
           )}

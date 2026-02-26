@@ -16,7 +16,9 @@ export default function Layout() {
           <h1 className="text-2xl font-bold text-blue-600 tracking-tight">
             Sentinela
           </h1>
-          <p className="text-xs text-gray-400">Sistema De Segurança Inteligente</p>
+          <p className="text-xs text-gray-400">
+            Sistema De Segurança Inteligente
+          </p>
         </div>
 
         <nav className="flex-1 px-4 space-y-2">
@@ -29,6 +31,16 @@ export default function Layout() {
             icon={<Users size={20} />}
             label="Suspeitos"
             to="/suspeitos"
+          />
+          <SidebarItem
+            icon={<Users size={20} />}
+            label="Vandalismo"
+            to="/vandalismo"
+          />
+          <SidebarItem
+            icon={<Users size={20} />}
+            label="Técnico"
+            to="/tecnico"
           />
           <SidebarItem
             icon={<Calendar size={20} />}

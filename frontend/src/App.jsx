@@ -4,9 +4,12 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Suspeitos from "./pages/Suspeitos";
 import NovaOcorrencia from "./pages/NovaOcorrencia";
+import NovoVandalismo from "./pages/NovoVandalismo";
+import Vandalismo from "./pages/Vandalismo";
 import Ficha from './pages/Ficha';
 import Ocorrencia from "./pages/Ocorrencia";
 import Configuracoes from './pages/Configuracoes';
+import Tecnico from "./pages/Tecnico";
 
 // Página temporária de Pacientes
 
@@ -21,8 +24,11 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/suspeitos" element={<Suspeitos />} />
+          <Route path="/tecnico" element={<Tecnico />} />
+          <Route path="/vandalismo" element={<Vandalismo />} />
           <Route path="/config" element={<Configuracoes />} />
           <Route path="/suspeitos/novo" element={<NovaOcorrencia />} />
+          <Route path="/vandalismo/novo" element={<NovoVandalismo />} />
           <Route path="/suspeitos/ficha" element={<Ficha />} />
           <Route path="/ocorrencia" element={<Ocorrencia />} />
         </Route>

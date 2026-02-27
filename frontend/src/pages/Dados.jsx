@@ -9,12 +9,26 @@ import {
   Trash2,
   ExternalLink,
   Info,
+  Plus,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export default function Dados() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("detalhes");
+
+  // Estado para gerenciar as visitas técnicas
+  const [visitas, setVisitas] = useState([
+    { id: 1, data: "2024-12-26", hora: "09:00", registro: "Visita técnica inicial. Constatado corte de cabos." }
+  ]);
+  const [novaVisita, setNovaVisita] = useState({ data: "", hora: "", registro: "" });
+
+  const adicionarVisita = (e) => {
+    e.preventDefault();
+    if (!novaVisita.data || !novaVisita.hora || !novaVisita.registro) return;
+    setVisitas([...visitas, { ...novaVisita, id: Date.now() }]);
+    setNovaVisita({ data: "", hora: "", registro: "" });
+  };
 
   // Dados simulados baseados no formulário de Novo Vandalismo
   const dados = {
@@ -86,6 +100,13 @@ export default function Dados() {
           setActiveTab={setActiveTab}
           icon={<MapPin size={18} />}
         />
+        <TabButton
+          id="visita"
+          label="Visitas"
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          icon={<Clock size={18} />}
+        />
       </div>
 
       {/* CONTEÚDO DAS ABAS */}
@@ -100,29 +121,54 @@ export default function Dados() {
                   <Clock size={18} className="text-blue-600" /> Cronologia
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <InfoCard label="Acionamento" date={dados.data_acionamento} time={dados.hora_acionamento} />
-                  <InfoCard label="Vandalismo" date={dados.data_vandalismo} time={dados.hora_queda} />
-                  <InfoCard label="Visita Técnica" date={dados.data_visita} time={dados.hora_visita} />
+                  <InfoCard
+                    label="Acionamento"
+                    date={dados.data_acionamento}
+                    time={dados.hora_acionamento}
+                  />
+                  <InfoCard
+                    label="Vandalismo"
+                    date={dados.data_vandalismo}
+                    time={dados.hora_queda}
+                  />
+                  <InfoCard
+                    label="Visita Técnica"
+                    date={dados.data_visita}
+                    time={dados.hora_visita}
+                  />
                 </div>
               </div>
 
               {/* INFORMAÇÕES */}
               <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
                 <h3 className="font-bold text-gray-800 mb-2 flex items-center gap-2">
-                  <FileText size={18} className="text-orange-600" /> Informações do Registro
+                  <FileText size={18} className="text-orange-600" /> Informações
+                  do Registro
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <span className="text-xs font-medium text-gray-400 uppercase">Causa Real</span>
-                    <p className="text-gray-700 font-medium mt-1">{dados.causa_real}</p>
+                    <span className="text-xs font-medium text-gray-400 uppercase">
+                      Causa Real
+                    </span>
+                    <p className="text-gray-700 font-medium mt-1">
+                      {dados.causa_real}
+                    </p>
                   </div>
                   <div>
-                    <span className="text-xs font-medium text-gray-400 uppercase">Fonte</span>
-                    <p className="text-gray-700 font-medium mt-1">{dados.fonte}</p>
+                    <span className="text-xs font-medium text-gray-400 uppercase">
+                      Fonte
+                    </span>
+                    <p className="text-gray-700 font-medium mt-1">
+                      {dados.fonte}
+                    </p>
                   </div>
                   <div className="md:col-span-2">
-                    <span className="text-xs font-medium text-gray-400 uppercase">Observações</span>
-                    <p className="text-gray-700 mt-1 bg-gray-50 p-3 rounded-lg text-sm">{dados.observacoes}</p>
+                    <span className="text-xs font-medium text-gray-400 uppercase">
+                      Observações
+                    </span>
+                    <p className="text-gray-700 mt-1 bg-gray-50 p-3 rounded-lg text-sm">
+                      {dados.observacoes}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -144,6 +190,116 @@ export default function Dados() {
               </div>
             </div>
           )}
+          {activeTab === "visita" && (
+            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6">
+              <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <Clock size={18} className="text-green-600" /> Histórico de
+                Visitas Técnicas
+              </h3>
+
+              {/* Formulário de Adição */}
+              <form
+                onSubmit={adicionarVisita}
+                className="bg-gray-50 p-5 rounded-xl border border-gray-200 space-y-4"
+              >
+                <div className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                  <Plus size={16} className="text-green-600" /> Nova Visita
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-medium text-gray-500">
+                      Data
+                    </label>
+                    <input
+                      type="date"
+                      required
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-green-500 bg-white"
+                      value={novaVisita.data}
+                      onChange={(e) =>
+                        setNovaVisita({ ...novaVisita, data: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-medium text-gray-500">
+                      Hora
+                    </label>
+                    <input
+                      type="time"
+                      required
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-green-500 bg-white"
+                      value={novaVisita.hora}
+                      onChange={(e) =>
+                        setNovaVisita({ ...novaVisita, hora: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-gray-500">
+                    Registro da Atividade
+                  </label>
+                  <textarea
+                    required
+                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-green-500 bg-white resize-none"
+                    rows="2"
+                    placeholder="Descreva o que foi realizado..."
+                    value={novaVisita.registro}
+                    onChange={(e) =>
+                      setNovaVisita({ ...novaVisita, registro: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    type="submit"
+                    className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700 transition shadow-sm flex items-center gap-2"
+                  >
+                    <Plus size={16} /> Adicionar
+                  </button>
+                </div>
+              </form>
+
+              {/* Lista de Visitas */}
+              <div className="space-y-3">
+                {visitas.length === 0 ? (
+                  <div className="text-center py-8 text-gray-400 text-sm">
+                    Nenhuma visita registrada.
+                  </div>
+                ) : (
+                  visitas.map((v) => (
+                    <div
+                      key={v.id}
+                      className="flex gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition group bg-white"
+                    >
+                      <div className="flex flex-col items-center min-w-[80px]">
+                        <div className="bg-green-50 text-green-700 text-xs font-bold px-2 py-1 rounded-md mb-1">
+                          {v.data.split("-").reverse().join("/")}
+                        </div>
+                        <span className="text-xs text-gray-400 flex items-center gap-1">
+                          <Clock size={10} /> {v.hora}
+                        </span>
+                      </div>
+                      <div className="flex-1 border-l-2 border-gray-100 pl-4">
+                        <p className="text-sm text-gray-600 leading-relaxed">
+                          {v.registro}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() =>
+                          setVisitas(visitas.filter((item) => item.id !== v.id))
+                        }
+                        className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition self-start"
+                        title="Remover visita"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* COLUNA DA DIREITA: RESUMO FIXO */}
@@ -154,14 +310,23 @@ export default function Dados() {
             </h3>
             <div className="space-y-4">
               <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-                <span className="text-sm text-gray-600">Filmagem Disponível?</span>
-                <span className={`px-3 py-1 rounded-full text-xs font-bold ${dados.filmagem === 'Sim' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                <span className="text-sm text-gray-600">
+                  Filmagem Disponível?
+                </span>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-bold ${dados.filmagem === "Sim" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+                >
                   {dados.filmagem}
                 </span>
               </div>
               <div>
-                <span className="text-xs font-medium text-gray-400 uppercase mb-2 block">Link das Fotos</span>
-                <a href="#" className="flex items-center gap-2 text-blue-600 text-sm font-medium hover:underline truncate">
+                <span className="text-xs font-medium text-gray-400 uppercase mb-2 block">
+                  Link das Fotos
+                </span>
+                <a
+                  href="#"
+                  className="flex items-center gap-2 text-blue-600 text-sm font-medium hover:underline truncate"
+                >
                   <ExternalLink size={14} /> {dados.fotografico}
                 </a>
               </div>

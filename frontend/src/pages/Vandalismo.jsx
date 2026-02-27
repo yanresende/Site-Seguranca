@@ -73,24 +73,24 @@ export default function Vandalismo() {
                 local="Rua das Flores, 123"
                 data="25/12/2024 - 14:30"
                 drive="Link do drive das fotos"
-                rota= "Sim"
-                status="Não Resolvido"
+                rota="Sim"
+                status="Pendente"
                 fonte="Relatório Analítico"
               />
               <VandalismoRow
                 local="Rua dos Pinheiros, 456"
                 data="24/12/2024 - 16:45"
                 drive="Link do drive das fotos"
-                rota= "Não"
-                status="Não resolvido"
+                rota="Não"
+                status="Em andamento"
                 fonte="Grupo Crise"
               />
               <VandalismoRow
                 local="Rua das Acácias, 789"
                 data="23/12/2024 - 10:15"
                 drive="Link do drive das fotos"
-                rota= "Não"
-                status="Não resolvido"
+                rota="Não"
+                status="Concluido"
                 fonte="Relatório Analítico"
               />
             </tbody>
@@ -105,6 +105,12 @@ function VandalismoRow({ local, data, drive, rota, status, fonte }) {
   const navigate = useNavigate();
   const [menuAberto, setMenuAberto] = useState(false);
   const menuRef = useRef(null);
+
+  const statusColors = {
+    "Concluido": "text-green-600 bg-green-50 hover:bg-green-100",
+    "Em andamento": "text-orange-600 bg-orange-50 hover:bg-orange-100",
+    "Pendente": "text-red-600 bg-red-50 hover:bg-red-100",
+  };
 
   // Fecha o menu se o usuário clicar fora dele
   useEffect(() => {
@@ -130,7 +136,9 @@ function VandalismoRow({ local, data, drive, rota, status, fonte }) {
           </div>
           <div>
             <div className="font-bold text-gray-700">{local}</div>
-            <div className="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded hover:bg-orange-100 transition">{status}</div>
+            <div className={`text-xs font-medium px-2 py-1 rounded transition ${statusColors[status] || "text-gray-600 bg-gray-50"}`}>
+              {status}
+            </div>
           </div>
         </div>
       </td>

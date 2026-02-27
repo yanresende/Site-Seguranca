@@ -1,0 +1,210 @@
+import { useState } from "react";
+import {
+  MapPin,
+  Clock,
+  Video,
+  FileText,
+  ArrowLeft,
+  Edit,
+  Trash2,
+  ExternalLink,
+  Info,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+export default function Dados() {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("detalhes");
+
+  // Dados simulados baseados no formulário de Novo Vandalismo
+  const dados = {
+    data_acionamento: "25/12/2024",
+    hora_acionamento: "14:30",
+    data_vandalismo: "25/12/2024",
+    hora_queda: "14:00",
+    data_visita: "26/12/2024",
+    hora_visita: "09:00",
+    filmagem: "Sim",
+    causa_real: "Corte de cabos de fibra óptica",
+    observacoes: "Local com baixa iluminação. Suspeito acessou pelo muro lateral.",
+    fotografico: "https://drive.google.com/drive/folders/...",
+    fonte: "Relatório Analítico",
+    cep: "01234-567",
+    rua: "Rua das Flores",
+    bairro: "Jardim Primavera",
+    cidade: "São Paulo",
+    uf: "SP",
+    numero: "123",
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* CABEÇALHO */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate("/vandalismo")}
+            className="p-2 hover:bg-gray-100 rounded-full transition"
+          >
+            <ArrowLeft size={20} className="text-gray-500" />
+          </button>
+          <div className="w-16 h-16 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl font-bold">
+            <MapPin size={32} />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800">
+              {dados.rua}, {dados.numero}
+            </h1>
+            <p className="text-sm text-gray-500">
+              {dados.bairro}, {dados.cidade} - {dados.uf}
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <button className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium hover:bg-gray-50 transition">
+            <Edit size={18} /> Editar
+          </button>
+          <button className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-xl text-sm font-bold hover:bg-red-100 transition">
+            <Trash2 size={18} /> Excluir
+          </button>
+        </div>
+      </div>
+
+      {/* NAVEGAÇÃO POR ABAS */}
+      <div className="flex gap-4 border-b border-gray-200">
+        <TabButton
+          id="detalhes"
+          label="Detalhes da Ocorrência"
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          icon={<Info size={18} />}
+        />
+        <TabButton
+          id="endereco"
+          label="Endereço Completo"
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          icon={<MapPin size={18} />}
+        />
+      </div>
+
+      {/* CONTEÚDO DAS ABAS */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* COLUNA DA ESQUERDA */}
+        <div className="lg:col-span-2 space-y-6">
+          {activeTab === "detalhes" && (
+            <>
+              {/* CRONOLOGIA */}
+              <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <Clock size={18} className="text-blue-600" /> Cronologia
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <InfoCard label="Acionamento" date={dados.data_acionamento} time={dados.hora_acionamento} />
+                  <InfoCard label="Vandalismo" date={dados.data_vandalismo} time={dados.hora_queda} />
+                  <InfoCard label="Visita Técnica" date={dados.data_visita} time={dados.hora_visita} />
+                </div>
+              </div>
+
+              {/* INFORMAÇÕES */}
+              <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+                <h3 className="font-bold text-gray-800 mb-2 flex items-center gap-2">
+                  <FileText size={18} className="text-orange-600" /> Informações do Registro
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <span className="text-xs font-medium text-gray-400 uppercase">Causa Real</span>
+                    <p className="text-gray-700 font-medium mt-1">{dados.causa_real}</p>
+                  </div>
+                  <div>
+                    <span className="text-xs font-medium text-gray-400 uppercase">Fonte</span>
+                    <p className="text-gray-700 font-medium mt-1">{dados.fonte}</p>
+                  </div>
+                  <div className="md:col-span-2">
+                    <span className="text-xs font-medium text-gray-400 uppercase">Observações</span>
+                    <p className="text-gray-700 mt-1 bg-gray-50 p-3 rounded-lg text-sm">{dados.observacoes}</p>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
+          {activeTab === "endereco" && (
+            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+              <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <MapPin size={18} className="text-green-600" /> Localização
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <DetailItem label="CEP" value={dados.cep} />
+                <DetailItem label="Rua" value={dados.rua} />
+                <DetailItem label="Número" value={dados.numero} />
+                <DetailItem label="Bairro" value={dados.bairro} />
+                <DetailItem label="Cidade" value={dados.cidade} />
+                <DetailItem label="Estado" value={dados.uf} />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* COLUNA DA DIREITA: RESUMO FIXO */}
+        <div className="space-y-6">
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+            <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <Video size={18} className="text-purple-600" /> Mídia e Evidências
+            </h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+                <span className="text-sm text-gray-600">Filmagem Disponível?</span>
+                <span className={`px-3 py-1 rounded-full text-xs font-bold ${dados.filmagem === 'Sim' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                  {dados.filmagem}
+                </span>
+              </div>
+              <div>
+                <span className="text-xs font-medium text-gray-400 uppercase mb-2 block">Link das Fotos</span>
+                <a href="#" className="flex items-center gap-2 text-blue-600 text-sm font-medium hover:underline truncate">
+                  <ExternalLink size={14} /> {dados.fotografico}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Componentes Auxiliares
+function TabButton({ id, label, activeTab, setActiveTab, icon }) {
+  const active = activeTab === id;
+  return (
+    <button
+      onClick={() => setActiveTab(id)}
+      className={`flex items-center gap-2 px-4 py-3 border-b-2 transition-all font-medium text-sm ${
+        active
+          ? "border-blue-600 text-blue-600"
+          : "border-transparent text-gray-500 hover:text-gray-700"
+      }`}
+    >
+      {icon} {label}
+    </button>
+  );
+}
+
+function InfoCard({ label, date, time }) {
+  return (
+    <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+      <span className="text-xs font-bold text-gray-400 uppercase block mb-1">{label}</span>
+      <div className="font-bold text-gray-800">{date}</div>
+      <div className="text-sm text-gray-500">{time}</div>
+    </div>
+  );
+}
+
+function DetailItem({ label, value }) {
+  return (
+    <div>
+      <span className="text-xs font-medium text-gray-400 uppercase">{label}</span>
+      <p className="text-gray-700 font-medium mt-1">{value}</p>
+    </div>
+  );
+}

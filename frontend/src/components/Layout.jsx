@@ -1,8 +1,11 @@
 import { Link, Outlet } from "react-router-dom";
 import {
   LayoutDashboard,
-  Users,
+  MapPinned,
   Calendar,
+  ChartNoAxesCombined,
+  Wrench,
+  ShieldUser,
   Settings,
   LogOut,
 } from "lucide-react";
@@ -28,17 +31,17 @@ export default function Layout() {
             to="/dashboard"
           />
           <SidebarItem
-            icon={<Users size={20} />}
+            icon={<ShieldUser size={20} />}
             label="Suspeitos"
             to="/suspeitos"
           />
           <SidebarItem
-            icon={<Users size={20} />}
+            icon={<MapPinned size={20} />}
             label="Vandalismo"
             to="/vandalismo"
           />
           <SidebarItem
-            icon={<Users size={20} />}
+            icon={<Wrench size={20} />}
             label="Técnico"
             to="/tecnico"
           />
@@ -46,6 +49,11 @@ export default function Layout() {
             icon={<Calendar size={20} />}
             label="Ocorrências"
             to="/ocorrencia"
+          />
+          <SidebarItem
+            icon={<ChartNoAxesCombined size={20} />}
+            label="Gráficos"
+            to="/graficos"
           />
           <SidebarItem
             icon={<Settings size={20} />}

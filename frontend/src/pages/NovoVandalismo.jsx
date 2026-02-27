@@ -79,6 +79,7 @@ export default function NovaOcorrencia() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
               label="Data do Acionamento"
+              type="date"
               placeholder="Ex: 25/12/2024"
               value={formData.data_acionamento}
               onChange={(e) =>
@@ -87,6 +88,7 @@ export default function NovaOcorrencia() {
             />
             <Input
               label="Hora do Acionamento"
+              type="time"
               placeholder="00:00"
               value={formData.hora_acionamento}
               onChange={(e) =>
@@ -95,6 +97,7 @@ export default function NovaOcorrencia() {
             />
             <Input
               label="Data do Vandalismo"
+              type="date"
               placeholder="Ex: 25/12/2024"
               value={formData.data_vandalismo}
               onChange={(e) =>
@@ -103,6 +106,7 @@ export default function NovaOcorrencia() {
             />
             <Input
               label="Hora do Vandalismo"
+              type="time"
               placeholder="00:00"
               value={formData.hora_queda}
               onChange={(e) =>
@@ -120,6 +124,7 @@ export default function NovaOcorrencia() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
               label="Data da visita"
+              type="date"
               placeholder="Ex: 25/12/2024"
               value={formData.data_visita}
               onChange={(e) =>
@@ -128,6 +133,7 @@ export default function NovaOcorrencia() {
             />
             <Input
               label="Hora da visita"
+              type="time"
               placeholder="00:00"
               value={formData.hora_visita}
               onChange={(e) =>
@@ -136,7 +142,7 @@ export default function NovaOcorrencia() {
             />
             <Input
               label="Filmagem disponível?"
-              placeholder="Sim/Não"
+              options={["Sim", "Não"]}
               value={formData.filmagem}
               onChange={(e) =>
                 setFormData({ ...formData, filmagem: e.target.value })
@@ -144,10 +150,26 @@ export default function NovaOcorrencia() {
             />
             <Input
               label="Causa Real"
-              placeholder="Ex: opçoes"
+              placeholder="Ex: Escreva a causa real do vandalismo"
               value={formData.causa_real}
               onChange={(e) =>
                 setFormData({ ...formData, causa_real: e.target.value })
+              }
+            />
+            <Input
+              label="Fonte"
+              options={["Grupo Crise", "Relatório Analítico"]}
+              value={formData.fonte}
+              onChange={(e) =>
+                setFormData({ ...formData, fonte: e.target.value })
+              }
+            />
+            <Input
+              label="Fotográfico disponível?"
+              placeholder={"Link do drive das fotos"}
+              value={formData.fotografico}
+              onChange={(e) =>
+                setFormData({ ...formData, fotografico: e.target.value })
               }
             />
             <Input
@@ -156,22 +178,6 @@ export default function NovaOcorrencia() {
               value={formData.observacoes}
               onChange={(e) =>
                 setFormData({ ...formData, observacoes: e.target.value })
-              }
-            />
-            <Input
-              label="Fotográfico disponível?"
-              placeholder="Sim/Não"
-              value={formData.fotografico}
-              onChange={(e) =>
-                setFormData({ ...formData, fotografico: e.target.value })
-              }
-            />
-            <Input
-              label="Fonte"
-              placeholder="Grupo Crise/Relatório Analítico"
-              value={formData.fonte}
-              onChange={(e) =>
-                setFormData({ ...formData, fonte: e.target.value })
               }
             />
           </div>
@@ -235,17 +241,30 @@ export default function NovaOcorrencia() {
   );
 }
 
-function Input({ label, type = "text", placeholder, value, onChange }) {
+function Input({ label, type = "text", placeholder, value, onChange, options }) {
   return (
     <div className="space-y-1">
       <label className="text-sm font-medium text-gray-700">{label}</label>
-      <input
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500 transition"
-      />
+      {options ? (
+        <select
+          value={value}
+          onChange={onChange}
+          className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500 transition bg-white"
+        >
+          <option value="">Selecione...</option>
+          {options.map((opt) => (
+            <option key={opt} value={opt}>{opt}</option>
+          ))}
+        </select>
+      ) : (
+        <input
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500 transition"
+        />
+      )}
     </div>
   );
 }

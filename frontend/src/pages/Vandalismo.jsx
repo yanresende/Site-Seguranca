@@ -47,10 +47,10 @@ export default function Vandalismo() {
           />
         </div>
         <select className="px-4 py-2 rounded-lg border border-gray-200 outline-none text-gray-600 bg-white">
-          <option>Todos os Status</option>
-          <option>Detidos</option>
-          <option>Liberados</option>
-          <option>Reincidentes</option>
+          <option>Local</option>
+          <option>Status</option>
+          <option>Fonte</option>
+          <option>Rota</option>
         </select>
       </div>
 
@@ -60,31 +60,38 @@ export default function Vandalismo() {
           <table className="w-full text-left">
             <thead className="bg-gray-50 text-gray-400 text-xs uppercase font-semibold">
               <tr>
-                <th className="px-6 py-4">Vandalismo</th>
-                <th className="px-6 py-4">CPF</th>
-                <th className="px-6 py-4">Última Ocorrência</th>
-                <th className="px-6 py-4">Status</th>
+                <th className="px-6 py-4">Local</th>
+                <th className="px-6 py-4">Data</th>
+                <th className="px-6 py-4">Rota</th>
+                <th className="px-6 py-4">Fonte</th>
+                <th className="px-6 py-4">Drive</th>
                 <th className="px-6 py-4 text-center">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               <VandalismoRow
-                name="Marcos Oliveira"
-                email="Furto de Cabo"
-                cpf="123.456.789-00"
-                lastVisit="20/02/2026"
+                local="Rua das Flores, 123"
+                data="25/12/2024 - 14:30"
+                drive="Link do drive das fotos"
+                rota= "Sim"
+                status="Não Resolvido"
+                fonte="Relatório Analítico"
               />
               <VandalismoRow
-                name="Juliana Ferreira"
-                email="Tentativa de Roubo"
-                cpf="987.654.321-11"
-                lastVisit="15/01/2026"
+                local="Rua dos Pinheiros, 456"
+                data="24/12/2024 - 16:45"
+                drive="Link do drive das fotos"
+                rota= "Não"
+                status="Não resolvido"
+                fonte="Grupo Crise"
               />
               <VandalismoRow
-                name="Ricardo Mendes"
-                email="Suspeito com Objetos Suspeitos"
-                cpf="456.123.789-22"
-                lastVisit="02/02/2026"
+                local="Rua das Acácias, 789"
+                data="23/12/2024 - 10:15"
+                drive="Link do drive das fotos"
+                rota= "Não"
+                status="Não resolvido"
+                fonte="Relatório Analítico"
               />
             </tbody>
           </table>
@@ -94,7 +101,7 @@ export default function Vandalismo() {
   );
 }
 
-function VandalismoRow({ name, email, cpf, lastVisit }) {
+function VandalismoRow({ local, data, drive, rota, status, fonte }) {
   const navigate = useNavigate();
   const [menuAberto, setMenuAberto] = useState(false);
   const menuRef = useRef(null);
@@ -116,24 +123,22 @@ function VandalismoRow({ name, email, cpf, lastVisit }) {
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-red-50 text-red-600 flex items-center justify-center font-bold">
             <img
-              src="/img/homem-perfil.png"
-              alt="Perfil do Suspeito"
+              src="/map-pin.svg"
+              alt="Mapa"
               className="w-8 h-8 rounded-full"
             />
           </div>
           <div>
-            <div className="font-bold text-gray-700">{name}</div>
-            <div className="text-xs text-red-400">{email}</div>
+            <div className="font-bold text-gray-700">{local}</div>
+            <div className="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded hover:bg-orange-100 transition">{status}</div>
           </div>
         </div>
       </td>
-      <td className="px-6 py-4 text-sm text-gray-500">{cpf}</td>
-      <td className="px-6 py-4 text-sm text-gray-500">{lastVisit}</td>
-      <td className="px-6 py-4">
-        <button className="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded hover:bg-orange-100 transition">
-          Reincidente
-        </button>
-      </td>
+      <td className="px-6 py-4 text-sm text-gray-500">{data}</td>
+      <td className="px-6 py-4 text-sm text-gray-500">{rota}</td>
+      <td className="px-6 py-4 text-sm text-gray-500">{fonte}</td>
+      <td className="px-6 py-4 text-sm text-gray-500">{drive}</td>
+      
 
       {/* BOTÃO DE AÇÃO COM MENU DROP DOWN */}
       <td className="px-6 py-4 text-center relative" ref={menuRef}>
@@ -147,10 +152,10 @@ function VandalismoRow({ name, email, cpf, lastVisit }) {
         {menuAberto && (
           <div className="absolute right-6 top-12 w-48 bg-white rounded-xl shadow-xl border border-gray-100 z-50 py-2 animate-in fade-in zoom-in duration-200">
             <button
-              onClick={() => navigate("/vandalismo/ficha")}
+              onClick={() => navigate("/vandalismo/dados")}
               className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2"
             >
-              <FileWarning size={16} /> Ver Ficha
+              <FileWarning size={16} /> Ver Dados
             </button>
             <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 flex items-center gap-2">
               <Settings size={16} /> Editar Dados

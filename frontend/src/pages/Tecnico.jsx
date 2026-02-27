@@ -2,17 +2,17 @@ import { useNavigate } from 'react-router-dom';
 import { Search, Plus, MoreHorizontal, UserX, FileWarning, Settings, Trash2 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
-export default function Vandalismo() {
+export default function Tecnico() {
   const navigate = useNavigate();
   return (
     <div className="space-y-6">
       {/* CABEÇALHO DA PÁGINA */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Banco de Vandalismo</h1>
-          <p className="text-gray-500 text-sm">Gerencie os registros de incidentes e pessoas envolvidas.</p>
+          <h1 className="text-2xl font-bold text-gray-800">Banco de Técnicos</h1>
+          <p className="text-gray-500 text-sm">Gerencie os registros de técnicos e suas atividades.</p>
         </div>
-        <button onClick={() => navigate('/vandalismo/novo')} className="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md shadow-blue-100">
+        <button onClick={() => navigate('/suspeitos/novo')} className="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md shadow-blue-100">
           <Plus size={20} />
           Novo Registro
         </button>
@@ -36,13 +36,13 @@ export default function Vandalismo() {
         </select>
       </div>
 
-      {/* TABELA DE VANDALISMO */}
+      {/* TABELA DE Tecnico */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead className="bg-gray-50 text-gray-400 text-xs uppercase font-semibold">
               <tr>
-                <th className="px-6 py-4">Vandalismo</th>
+                <th className="px-6 py-4">Tecnico</th>
                 <th className="px-6 py-4">CPF</th>
                 <th className="px-6 py-4">Última Ocorrência</th>
                 <th className="px-6 py-4">Status</th>
@@ -50,21 +50,21 @@ export default function Vandalismo() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              <VandalismoRow 
+              <TecnicoRow 
                 name="Marcos Oliveira" 
-                email="Furto de Cabo" 
+                email="Tecnico da Vivo" 
                 cpf="123.456.789-00" 
                 lastVisit="20/02/2026" 
               />
-              <VandalismoRow 
+              <TecnicoRow 
                 name="Juliana Ferreira" 
-                email="Tentativa de Roubo" 
+                email="Tecnico da Claro" 
                 cpf="987.654.321-11" 
                 lastVisit="15/01/2026" 
               />
-              <VandalismoRow 
+              <TecnicoRow 
                 name="Ricardo Mendes" 
-                email="Suspeito com Objetos Suspeitos" 
+                email="Tecnico da Tim" 
                 cpf="456.123.789-22" 
                 lastVisit="02/02/2026" 
               />
@@ -76,7 +76,7 @@ export default function Vandalismo() {
   );
 }
 
-function VandalismoRow({ name, email, cpf, lastVisit }) {
+function TecnicoRow({ name, email, cpf, lastVisit }) {
   const navigate = useNavigate();
   const [menuAberto, setMenuAberto] = useState(false);
   const menuRef = useRef(null);
@@ -101,7 +101,7 @@ function VandalismoRow({ name, email, cpf, lastVisit }) {
           </div>
           <div>
             <div className="font-bold text-gray-700">{name}</div>
-            <div className="text-xs text-red-400">{email}</div>
+            <div className="text-xs text-gray-500">{email}</div>
           </div>
         </div>
       </td>
@@ -109,7 +109,7 @@ function VandalismoRow({ name, email, cpf, lastVisit }) {
       <td className="px-6 py-4 text-sm text-gray-500">{lastVisit}</td>
       <td className="px-6 py-4">
         <button className="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded hover:bg-orange-100 transition">
-          Reincidente
+          Suspeito
         </button>
       </td>
       
@@ -125,7 +125,7 @@ function VandalismoRow({ name, email, cpf, lastVisit }) {
         {menuAberto && (
           <div className="absolute right-6 top-12 w-48 bg-white rounded-xl shadow-xl border border-gray-100 z-50 py-2 animate-in fade-in zoom-in duration-200">
             <button 
-              onClick={() => navigate('/vandalismo/ficha')}
+              onClick={() => navigate('/suspeitos/ficha')}
               className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2"
             >
               <FileWarning size={16} /> Ver Ficha

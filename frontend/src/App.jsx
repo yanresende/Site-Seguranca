@@ -7,9 +7,11 @@ import NovaOcorrencia from "./pages/NovaOcorrencia";
 import NovoVandalismo from "./pages/NovoVandalismo";
 import Vandalismo from "./pages/Vandalismo";
 import Ficha from './pages/Ficha';
+import Dados from './pages/Dados';
 import Ocorrencia from "./pages/Ocorrencia";
 import Configuracoes from './pages/Configuracoes';
 import Tecnico from "./pages/Tecnico";
+import Graficos from "./pages/Graficos";
 
 // Página temporária de Pacientes
 
@@ -30,7 +32,9 @@ function App() {
           <Route path="/suspeitos/novo" element={<NovaOcorrencia />} />
           <Route path="/vandalismo/novo" element={<NovoVandalismo />} />
           <Route path="/suspeitos/ficha" element={<Ficha />} />
+          <Route path="/vandalismo/dados" element={<Dados />} />
           <Route path="/ocorrencia" element={<Ocorrencia />} />
+          <Route path="/graficos" element={<Graficos />} />
         </Route>
 
         <Route path="/" element={<Navigate to="/dashboard" />} />

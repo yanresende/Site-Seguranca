@@ -3,7 +3,7 @@ import {
   Search,
   Plus,
   MoreHorizontal,
-  UserX,
+  MapPinned,
   FileWarning,
   Settings,
   Trash2,
@@ -122,10 +122,10 @@ function VandalismoRow({ local, data, drive, rota, status, fonte }) {
       <td className="px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-red-50 text-red-600 flex items-center justify-center font-bold">
-            <img
-              src="/map-pin.svg"
-              alt="Mapa"
-              className="w-8 h-8 rounded-full"
+            <MapPinned
+              size={20}
+              alt="Ícone de vandalismo"
+              aria-label="Mapa"
             />
           </div>
           <div>

@@ -123,24 +123,6 @@ export default function NovaOcorrencia() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
-              label="Data da visita"
-              type="date"
-              placeholder="Ex: 25/12/2024"
-              value={formData.data_visita}
-              onChange={(e) =>
-                setFormData({ ...formData, data_visita: e.target.value })
-              }
-            />
-            <Input
-              label="Hora da visita"
-              type="time"
-              placeholder="00:00"
-              value={formData.hora_visita}
-              onChange={(e) =>
-                setFormData({ ...formData, hora_visita: e.target.value })
-              }
-            />
-            <Input
               label="Filmagem disponível?"
               options={["Sim", "Não"]}
               value={formData.filmagem}

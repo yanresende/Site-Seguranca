@@ -12,6 +12,27 @@ import { useState, useRef, useEffect } from "react";
 
 export default function Vandalismo() {
   const navigate = useNavigate();
+  const [ocorrencias, setOcorrencias] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/ocorrencias")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Falha ao buscar ocorrências");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setOcorrencias(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
   return (
     <div className="space-y-6">
       {/* CABEÇALHO DA PÁGINA */}
@@ -42,7 +63,7 @@ export default function Vandalismo() {
           />
           <input
             type="text"
-            placeholder="Buscar por nome, CPF ou característica..."
+            placeholder="Buscar por rua, bairro ou cidade..."
             className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500 transition"
           />
         </div>
@@ -50,7 +71,6 @@ export default function Vandalismo() {
           <option>Local</option>
           <option>Status</option>
           <option>Fonte</option>
-          <option>Rota</option>
         </select>
       </div>
 
@@ -61,38 +81,33 @@ export default function Vandalismo() {
             <thead className="bg-gray-50 text-gray-400 text-xs uppercase font-semibold">
               <tr>
                 <th className="px-6 py-4">Local</th>
-                <th className="px-6 py-4">Data</th>
-                <th className="px-6 py-4">Rota</th>
+                <th className="px-6 py-4">Data Acionamento</th>
+                <th className="px-6 py-4">Observações</th>
                 <th className="px-6 py-4">Fonte</th>
                 <th className="px-6 py-4">Drive</th>
                 <th className="px-6 py-4 text-center">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              <VandalismoRow
-                local="Rua das Flores, 123"
-                data="25/12/2024 - 14:30"
-                drive="Link do drive das fotos"
-                rota="Sim"
-                status="Pendente"
-                fonte="Relatório Analítico"
-              />
-              <VandalismoRow
-                local="Rua dos Pinheiros, 456"
-                data="24/12/2024 - 16:45"
-                drive="Link do drive das fotos"
-                rota="Não"
-                status="Em andamento"
-                fonte="Grupo Crise"
-              />
-              <VandalismoRow
-                local="Rua das Acácias, 789"
-                data="23/12/2024 - 10:15"
-                drive="Link do drive das fotos"
-                rota="Não"
-                status="Concluido"
-                fonte="Relatório Analítico"
-              />
+              {loading && (
+                <tr>
+                  <td colSpan="6" className="text-center py-8 text-gray-500">
+                    Carregando...
+                  </td>
+                </tr>
+              )}
+              {error && (
+                <tr>
+                  <td colSpan="6" className="text-center py-8 text-red-500">
+                    {error}
+                  </td>
+                </tr>
+              )}
+              {!loading &&
+                !error &&
+                ocorrencias.map((ocorrencia) => (
+                  <VandalismoRow key={ocorrencia.id} ocorrencia={ocorrencia} />
+                ))}
             </tbody>
           </table>
         </div>
@@ -101,7 +116,7 @@ export default function Vandalismo() {
   );
 }
 
-function VandalismoRow({ local, data, drive, rota, status, fonte }) {
+function VandalismoRow({ ocorrencia }) {
   const navigate = useNavigate();
   const [menuAberto, setMenuAberto] = useState(false);
   const menuRef = useRef(null);
@@ -123,6 +138,10 @@ function VandalismoRow({ local, data, drive, rota, status, fonte }) {
     return () => document.removeEventListener("mousedown", handleClickFora);
   }, []);
 
+  // Format date and time
+  const dataFormatada = `${ocorrencia.dataAcionamento.split("-").reverse().join("/")} - ${ocorrencia.horaAcionamento}`;
+  const status = "Pendente"; // Placeholder, as it's not in the model
+
   return (
     <tr className="hover:bg-gray-50 transition group">
       <td className="px-6 py-4">
@@ -135,17 +154,19 @@ function VandalismoRow({ local, data, drive, rota, status, fonte }) {
             />
           </div>
           <div>
-            <div className="font-bold text-gray-700">{local}</div>
+            <div className="font-bold text-gray-700">{`${ocorrencia.rua}, ${ocorrencia.numero}`}</div>
             <div className={`text-xs font-medium px-2 py-1 rounded transition ${statusColors[status] || "text-gray-600 bg-gray-50"}`}>
               {status}
             </div>
           </div>
         </div>
       </td>
-      <td className="px-6 py-4 text-sm text-gray-500">{data}</td>
-      <td className="px-6 py-4 text-sm text-gray-500">{rota}</td>
-      <td className="px-6 py-4 text-sm text-gray-500">{fonte}</td>
-      <td className="px-6 py-4 text-sm text-gray-500">{drive}</td>
+      <td className="px-6 py-4 text-sm text-gray-500">{dataFormatada}</td>
+      <td className="px-6 py-4 text-sm text-gray-500 truncate max-w-xs">
+        {ocorrencia.observacoes}
+      </td>
+      <td className="px-6 py-4 text-sm text-gray-500">{ocorrencia.fonte}</td>
+      <td className="px-6 py-4 text-sm text-gray-500">{ocorrencia.fotografico}</td>
       
 
       {/* BOTÃO DE AÇÃO COM MENU DROP DOWN */}
@@ -160,7 +181,7 @@ function VandalismoRow({ local, data, drive, rota, status, fonte }) {
         {menuAberto && (
           <div className="absolute right-6 top-12 w-48 bg-white rounded-xl shadow-xl border border-gray-100 z-50 py-2 animate-in fade-in zoom-in duration-200">
             <button
-              onClick={() => navigate("/vandalismo/dados")}
+              onClick={() => navigate(`/vandalismo/dados/${ocorrencia.id}`)}
               className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2"
             >
               <FileWarning size={16} /> Ver Dados

@@ -1,9 +1,10 @@
-package com.clinica.api.controller;
+package com.seguranca.api.controller;
 
-import com.clinica.api.model.Ocorrencia;
-import com.clinica.api.repository.OcorrenciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import com.seguranca.api.model.Ocorrencia;
+import com.seguranca.api.repository.OcorrenciaRepository;
 
 import java.util.List;
 

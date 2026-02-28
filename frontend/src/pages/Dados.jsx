@@ -38,6 +38,16 @@ export default function Dados() {
       })
       .then((data) => {
         setDados(data);
+        // Atualiza a lista de visitas se houver dados vindos do backend
+        if (data.visitas && Array.isArray(data.visitas)) {
+          const visitasBackend = data.visitas.map((v) => ({
+            id: v.id,
+            data: v.dataVisita,      // Backend: dataVisita -> Frontend: data
+            hora: v.horaVisita,      // Backend: horaVisita -> Frontend: hora
+            registro: v.registroVisita // Backend: registroVisita -> Frontend: registro
+          }));
+          setVisitas(visitasBackend);
+        }
         setLoading(false);
       })
       .catch((error) => {

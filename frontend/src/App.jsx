@@ -32,7 +32,7 @@ function App() {
           <Route path="/suspeitos/novo" element={<NovaOcorrencia />} />
           <Route path="/vandalismo/novo" element={<NovoVandalismo />} />
           <Route path="/suspeitos/ficha" element={<Ficha />} />
-          <Route path="/vandalismo/dados" element={<Dados />} />
+          <Route path="/vandalismo/dados/:id" element={<Dados />} />
           <Route path="/ocorrencia" element={<Ocorrencia />} />
           <Route path="/graficos" element={<Graficos />} />
         </Route>

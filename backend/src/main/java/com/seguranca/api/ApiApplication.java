@@ -1,4 +1,4 @@
-package com.clinica.api; // O pacote DEVE ser igual ao caminho das pastas
+package com.seguranca.api; // O pacote DEVE ser igual ao caminho das pastas
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

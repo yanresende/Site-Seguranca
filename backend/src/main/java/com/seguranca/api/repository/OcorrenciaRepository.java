@@ -1,10 +1,10 @@
-package com.clinica.api.repository;
+package com.seguranca.api.repository;
 
-import com.clinica.api.model.Ocorrencia;
+import com.seguranca.api.model.Ocorrencia;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OcorrenciaRepository extends JpaRepository<Ocorrencia, Long> {
-    // O Spring cria automaticamente métodos como save(), findAll(), deleteById()
+    // Métodos de consulta personalizados podem ser adicionados aqui
 }

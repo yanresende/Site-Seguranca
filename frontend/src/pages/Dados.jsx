@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   MapPin,
   Clock,
@@ -11,17 +11,40 @@ import {
   Info,
   Plus,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function Dados() {
   const navigate = useNavigate();
+  const { id } = useParams(); // Pega o ID da URL (se configurado na rota)
   const [activeTab, setActiveTab] = useState("detalhes");
+  const [dados, setDados] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // Estado para gerenciar as visitas técnicas
   const [visitas, setVisitas] = useState([
     { id: 1, data: "2024-12-26", hora: "09:00", registro: "Visita técnica inicial. Constatado corte de cabos." }
   ]);
   const [novaVisita, setNovaVisita] = useState({ data: "", hora: "", registro: "" });
+
+  // Busca os dados do backend ao carregar a página
+  useEffect(() => {
+    // Se você ainda não tem rotas com ID, pode testar fixo com ".../ocorrencias/1"
+    const idBusca = id || 1; 
+    
+    fetch(`http://localhost:8080/api/ocorrencias/${idBusca}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Erro na resposta da API");
+        return res.json();
+      })
+      .then((data) => {
+        setDados(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Erro ao buscar dados:", error);
+        setLoading(false);
+      });
+  }, [id]);
 
   const adicionarVisita = (e) => {
     e.preventDefault();
@@ -30,26 +53,13 @@ export default function Dados() {
     setNovaVisita({ data: "", hora: "", registro: "" });
   };
 
-  // Dados simulados baseados no formulário de Novo Vandalismo
-  const dados = {
-    data_acionamento: "25/12/2024",
-    hora_acionamento: "14:30",
-    data_vandalismo: "25/12/2024",
-    hora_queda: "14:00",
-    data_visita: "26/12/2024",
-    hora_visita: "09:00",
-    filmagem: "Sim",
-    causa_real: "Corte de cabos de fibra óptica",
-    observacoes: "Local com baixa iluminação. Suspeito acessou pelo muro lateral.",
-    fotografico: "https://drive.google.com/drive/folders/...",
-    fonte: "Relatório Analítico",
-    cep: "01234-567",
-    rua: "Rua das Flores",
-    bairro: "Jardim Primavera",
-    cidade: "São Paulo",
-    uf: "SP",
-    numero: "123",
-  };
+  if (loading) {
+    return <div className="flex justify-center items-center h-screen text-gray-500">Carregando dados...</div>;
+  }
+
+  if (!dados) {
+    return <div className="flex justify-center items-center h-screen text-red-500">Registro não encontrado.</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -123,18 +133,18 @@ export default function Dados() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <InfoCard
                     label="Acionamento"
-                    date={dados.data_acionamento}
-                    time={dados.hora_acionamento}
+                    date={dados.dataAcionamento || dados.data_acionamento}
+                    time={dados.horaAcionamento || dados.hora_acionamento}
                   />
                   <InfoCard
                     label="Vandalismo"
-                    date={dados.data_vandalismo}
-                    time={dados.hora_queda}
+                    date={dados.dataVandalismo || dados.data_vandalismo}
+                    time={dados.horaQueda || dados.hora_queda}
                   />
                   <InfoCard
                     label="Visita Técnica"
-                    date={dados.data_visita}
-                    time={dados.hora_visita}
+                    date={dados.dataVisita || dados.data_visita}
+                    time={dados.horaVisita || dados.hora_visita}
                   />
                 </div>
               </div>
@@ -151,7 +161,7 @@ export default function Dados() {
                       Causa Real
                     </span>
                     <p className="text-gray-700 font-medium mt-1">
-                      {dados.causa_real}
+                      {dados.causaReal || dados.causa_real}
                     </p>
                   </div>
                   <div>
@@ -359,8 +369,8 @@ function InfoCard({ label, date, time }) {
   return (
     <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
       <span className="text-xs font-bold text-gray-400 uppercase block mb-1">{label}</span>
-      <div className="font-bold text-gray-800">{date}</div>
-      <div className="text-sm text-gray-500">{time}</div>
+      <div className="font-bold text-gray-800">{date || "--/--/----"}</div>
+      <div className="text-sm text-gray-500">{time || "--:--"}</div>
     </div>
   );
 }
@@ -369,7 +379,7 @@ function DetailItem({ label, value }) {
   return (
     <div>
       <span className="text-xs font-medium text-gray-400 uppercase">{label}</span>
-      <p className="text-gray-700 font-medium mt-1">{value}</p>
+      <p className="text-gray-700 font-medium mt-1">{value || "N/A"}</p>
     </div>
   );
 }

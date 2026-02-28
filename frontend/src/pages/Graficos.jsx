@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StatsCard from "../components/StatsCard";
 import {
   ShieldAlert,
@@ -7,13 +7,88 @@ import {
   Activity,
   MapPin,
   Calendar,
-  TrendingUp,
   Filter,
   Download,
   PieChart,
+  Radio,
 } from "lucide-react";
 
 export default function Graficos() {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const today = new Date();
+  const defaultFim = today.toISOString().split('T')[0];
+  const defaultInicio = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+  const [dates, setDates] = useState({
+    inicio: defaultInicio,
+    fim: defaultFim
+  });
+
+  const fetchStats = () => {
+    setLoading(true);
+    const params = new URLSearchParams(dates);
+    fetch(`http://localhost:8080/api/dashboard/stats?${params.toString()}`)
+      .then(res => res.json())
+      .then(data => {
+        setStats(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Erro ao carregar estatísticas:", err);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  if (loading || !stats) {
+    return <div className="flex justify-center items-center h-screen text-gray-500">Carregando estatísticas...</div>;
+  }
+
+  // Cálculos para exibição
+  const taxaResolucao = stats.totalOcorrencias > 0 
+    ? Math.round((stats.concluidos / stats.totalOcorrencias) * 100) 
+    : 0;
+
+  // Preparar dados para o gráfico de pizza (Status)
+  const statusData = Object.entries(stats.porStatus || {});
+  const statusHexColors = {
+    "Concluido": "#22c55e",
+    "Pendente": "#ef4444",
+    "Em andamento": "#f97316"
+  };
+  const statusBgColors = {
+    "Concluido": "bg-green-500",
+    "Concluida": "bg-green-500",
+    "Pendente": "bg-red-500",
+    "Em andamento": "bg-orange-500"
+  };
+
+  // Gerar o conic-gradient para o gráfico de pizza
+  let cumulativePercent = 0;
+  const gradientParts = statusData.map(([status, count]) => {
+    const percent = (count / stats.totalOcorrencias) * 100;
+    const color = statusHexColors[status] || "#6b7280"; // gray-500
+    const part = `${color} ${cumulativePercent}% ${cumulativePercent + percent}%`;
+    cumulativePercent += percent;
+    return part;
+  });
+  const conicGradient = `conic-gradient(${gradientParts.join(', ')})`;
+
+  // Preparar dados para o gráfico de Horários de Pico
+  const peakHoursData = new Array(24).fill(0); // 24 barras para 24h
+  Object.entries(stats.porHora || {}).forEach(([hour, count]) => {
+    const hourInt = parseInt(hour, 10);
+    if (hourInt >= 0 && hourInt < 24) peakHoursData[hourInt] += count;
+  });
+  const maxPeakCount = Math.max(...peakHoursData, 1);
+
+  // Encontrar o bairro com mais casos
+  const topBairroEntry = Object.entries(stats.porBairro || {})[0];
+  const topBairroName = topBairroEntry ? topBairroEntry[0] : "N/A";
+
   return (
     <div className="space-y-8">
       {/* 1. Header & Filters */}
@@ -35,15 +110,19 @@ export default function Graficos() {
             <input
               type="date"
               className="text-sm outline-none text-gray-600 bg-transparent"
+              value={dates.inicio}
+              onChange={(e) => setDates({...dates, inicio: e.target.value})}
             />
             <span className="text-gray-400">-</span>
             <input
               type="date"
               className="text-sm outline-none text-gray-600 bg-transparent"
+              value={dates.fim}
+              onChange={(e) => setDates({...dates, fim: e.target.value})}
             />
           </div>
-          <button className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium shadow-sm transition">
-            <Filter size={18} /> Filtros
+          <button onClick={fetchStats} className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium shadow-sm transition">
+            <Filter size={18} /> Aplicar
           </button>
           <button className="flex items-center gap-2 bg-blue-600 px-4 py-2 rounded-xl text-white hover:bg-blue-700 font-bold shadow-lg shadow-blue-100 transition">
             <Download size={18} /> Exportar PDF
@@ -55,58 +134,47 @@ export default function Graficos() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard
           title="Total de Ocorrências"
-          value="1,248"
+          value={stats.totalOcorrencias}
           icon={<FileWarning className="text-blue-600" />}
           color="bg-blue-600"
         />
         <StatsCard
           title="Taxa de Resolução"
-          value="86%"
+          value={`${taxaResolucao}%`}
           icon={<ShieldAlert className="text-green-600" />}
           color="bg-green-600"
         />
         <StatsCard
-          title="Tempo Médio Resp."
-          value="12 min"
+          title="Ocorrências Pendentes"
+          value={stats.porStatus["Pendente"] || 0}
           icon={<Siren className="text-orange-600" />}
           color="bg-orange-600"
         />
         <StatsCard
-          title="Prejuízo Evitado"
-          value="R$ 45k"
-          icon={<Activity className="text-purple-600" />}
+          title="Bairro com Mais Casos"
+          value={topBairroName}
+          icon={<MapPin className="text-purple-600" />}
           color="bg-purple-600"
         />
       </div>
 
       {/* 3. Main Charts Area */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Chart 1: Weekly/Monthly Trend (Wide) */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="font-bold text-gray-800 flex items-center gap-2">
-              <TrendingUp size={18} className="text-blue-500" /> Tendência de
-              Ocorrências
-            </h3>
-            <select className="text-sm border-none bg-gray-50 rounded-lg px-2 py-1 outline-none text-gray-600">
-              <option>Últimos 7 dias</option>
-              <option>Últimos 30 dias</option>
-              <option>Este Ano</option>
-            </select>
-          </div>
-
-          {/* Simulated Bar Chart */}
-          <div className="flex-1 flex items-end justify-between gap-4 px-2 h-64">
-            <BarDay day="01/02" height="h-32" color="bg-blue-200" />
-            <BarDay day="02/02" height="h-40" color="bg-blue-300" />
-            <BarDay day="03/02" height="h-24" color="bg-blue-200" />
-            <BarDay day="04/02" height="h-52" color="bg-blue-500" />
-            <BarDay day="05/02" height="h-44" color="bg-blue-400" />
-            <BarDay day="06/02" height="h-60" color="bg-blue-600" />
-            <BarDay day="07/02" height="h-36" color="bg-blue-300" />
-            <BarDay day="08/02" height="h-20" color="bg-blue-200" />
-            <BarDay day="09/02" height="h-48" color="bg-blue-500" />
-            <BarDay day="10/02" height="h-56" color="bg-blue-600" />
+        {/* Nova Estatística: Ocorrências por Fonte */}
+        <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <h3 className="font-bold text-gray-800 mb-6 flex items-center gap-2">
+            <Radio size={18} className="text-cyan-500" /> Ocorrências por Fonte
+          </h3>
+          <div className="space-y-5">
+            {Object.entries(stats.porFonte || {}).map(([fonte, count]) => (
+              <ProgressBar
+                key={fonte}
+                label={fonte}
+                percent={`${(count / stats.totalOcorrencias) * 100}%`}
+                count={count}
+                color="bg-cyan-500"
+              />
+            ))}
           </div>
         </div>
 
@@ -117,30 +185,28 @@ export default function Graficos() {
             Tipo
           </h3>
 
-          {/* CSS Pie Chart Simulation (Conic Gradient) */}
+          {/* Gráfico de Pizza Simples (Visualização em Lista com Barras) */}
           <div className="flex justify-center mb-6">
             <div
-              className="w-48 h-48 rounded-full bg-gray-100 relative"
-              style={{
-                background:
-                  "conic-gradient(#3b82f6 0% 65%, #ef4444 65% 80%, #f97316 80% 100%)",
-              }}
+              className="w-48 h-48 rounded-full relative"
+              style={{ background: conicGradient }}
             >
               <div className="absolute inset-4 bg-white rounded-full flex items-center justify-center flex-col">
-                <span className="text-3xl font-bold text-gray-800">1.2k</span>
+                <span className="text-3xl font-bold text-gray-800">{stats.totalOcorrencias}</span>
                 <span className="text-xs text-gray-400">Total</span>
               </div>
             </div>
           </div>
 
           <div className="space-y-3">
-            <LegendItem
-              color="bg-blue-500"
-              label="Furto de Cabos"
-              value="65%"
-            />
-            <LegendItem color="bg-red-500" label="Vandalismo" value="15%" />
-            <LegendItem color="bg-orange-500" label="Invasão" value="20%" />
+            {statusData.map(([status, count]) => (
+              <LegendItem 
+                key={status}
+                color={statusBgColors[status] || "bg-gray-400"} 
+                label={status} 
+                value={`${Math.round((count / stats.totalOcorrencias) * 100)}% (${count})`} 
+              />
+            ))}
           </div>
         </div>
       </div>
@@ -150,39 +216,18 @@ export default function Graficos() {
         {/* Locais Críticos */}
         <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
           <h3 className="font-bold text-gray-800 mb-6 flex items-center gap-2">
-            <MapPin size={18} className="text-red-500" /> Top 5 Locais Críticos
+            <MapPin size={18} className="text-red-500" /> Regiões com Mais Casos
           </h3>
           <div className="space-y-5">
-            <ProgressBar
-              label="Rua das Flores, Centro"
-              percent="85%"
-              count="142"
-              color="bg-red-500"
-            />
-            <ProgressBar
-              label="Av. Paulista, Bela Vista"
-              percent="60%"
-              count="98"
-              color="bg-orange-500"
-            />
-            <ProgressBar
-              label="Rua Augusta, Consolação"
-              percent="45%"
-              count="76"
-              color="bg-yellow-500"
-            />
-            <ProgressBar
-              label="Parque Ibirapuera"
-              percent="30%"
-              count="45"
-              color="bg-blue-500"
-            />
-            <ProgressBar
-              label="Terminal Barra Funda"
-              percent="20%"
-              count="32"
-              color="bg-green-500"
-            />
+            {Object.entries(stats.porBairro || {}).slice(0, 5).map(([bairro, count]) => (
+              <ProgressBar
+                key={bairro}
+                label={bairro}
+                percent={`${(count / stats.totalOcorrencias) * 100}%`}
+                count={count}
+                color="bg-red-500"
+              />
+            ))}
           </div>
         </div>
 
@@ -191,19 +236,21 @@ export default function Graficos() {
           <h3 className="font-bold text-gray-800 mb-6 flex items-center gap-2">
             <Calendar size={18} className="text-indigo-500" /> Horários de Pico
           </h3>
-          <div className="h-64 flex items-end gap-2">
-            {/* Simulated Histogram */}
-            {[10, 20, 45, 80, 100, 60, 40, 30, 20, 15, 10, 5].map((h, i) => (
-              <div
-                key={i}
-                className="flex-1 bg-indigo-100 rounded-t-md relative group hover:bg-indigo-200 transition-all"
-                style={{ height: `${h}%` }}
-              >
-                <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded pointer-events-none">
-                  {h * 2}
+          <div className="h-64 flex items-end gap-1 px-1">
+            {peakHoursData.map((count, i) => {
+              const height = (count / maxPeakCount) * 100;
+              return (
+                <div
+                  key={i}
+                  className="flex-1 bg-indigo-100 rounded-t-md relative group hover:bg-indigo-200 transition-all"
+                  style={{ height: `${height}%` }}
+                >
+                  <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded pointer-events-none whitespace-nowrap z-10">
+                    {i}h: {count}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className="flex justify-between text-xs text-gray-400 mt-2 px-1">
             <span>00h</span>
@@ -242,17 +289,6 @@ function ProgressBar({ label, percent, count, color }) {
       <div className="w-full bg-gray-100 rounded-full h-2.5">
         <div className={`h-2.5 rounded-full ${color}`} style={{ width: percent }}></div>
       </div>
-    </div>
-  );
-}
-
-function BarDay({ day, height, color }) {
-  return (
-    <div className="flex flex-col items-center gap-2 group cursor-pointer">
-      <div className="relative w-full flex justify-center">
-        <div className={`w-8 rounded-t-lg transition-all group-hover:opacity-80 ${height} ${color}`}></div>
-      </div>
-      <span className="text-xs font-medium text-gray-500">{day}</span>
     </div>
   );
 }

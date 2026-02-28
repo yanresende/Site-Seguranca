@@ -63,7 +63,7 @@ public class Ocorrencia {
         this.rua = rua;
     }
 
-    public void setfotografico(String fotografico) {
+    public void setFotografico(String fotografico) {
         this.fotografico = fotografico;
     }
 
@@ -107,6 +107,10 @@ public class Ocorrencia {
 
     public void setDataAcionamento(LocalDate dataAcionamento) {
         this.dataAcionamento = dataAcionamento;
+    }
+
+    public void setDataVandalismo(LocalDate dataVandalismo) {
+        this.dataVandalismo = dataVandalismo;
     }
 
     public void setHoraAcionamento(LocalTime horaAcionamento) {
@@ -153,6 +157,18 @@ public class Ocorrencia {
 
     public LocalDate getDataAcionamento() {
         return dataAcionamento;
+    }
+
+    public LocalDate getDataVandalismo() {
+        return dataVandalismo;
+    }
+
+    public LocalTime getHoraQueda() {
+        return horaQueda;
+    }
+
+    public String getCausaReal() {
+        return causaReal;
     }
 
     public String getStatus() {

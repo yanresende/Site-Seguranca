@@ -47,9 +47,58 @@ export default function NovaOcorrencia() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Dados salvos:", formData);
-    alert("Ocorrência registrada com sucesso! (Simulado)");
-    navigate("/vandalismo");
+
+    // Validação manual dos campos obrigatórios
+    if (
+      !formData.data_acionamento ||
+      !formData.hora_acionamento ||
+      !formData.data_vandalismo ||
+      !formData.hora_queda ||
+      !formData.rua ||
+      !formData.bairro ||
+      !formData.cidade
+    ) {
+      alert("Por favor, preencha todos os campos obrigatórios marcados com *.");
+      return;
+    }
+
+    // Prepara o objeto para enviar ao backend (convertendo para o formato esperado pela API)
+    const payload = {
+      rua: formData.rua,
+      bairro: formData.bairro,
+      cidade: formData.cidade,
+      uf: formData.uf,
+      numero: formData.numero,
+      cep: formData.cep,
+      dataAcionamento: formData.data_acionamento || null,
+      horaAcionamento: formData.hora_acionamento ? formData.hora_acionamento + ":00" : null,
+      dataVandalismo: formData.data_vandalismo || null,
+      horaQueda: formData.hora_queda ? formData.hora_queda + ":00" : null,
+      causaReal: formData.causa_real,
+      observacoes: formData.observacoes,
+      filmagem: formData.filmagem,
+      fonte: formData.fonte,
+      fotografico: formData.fotografico,
+      status: "Pendente" // Define um status inicial padrão
+    };
+
+    fetch("http://localhost:8080/api/ocorrencias", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then((res) => {
+        if (res.ok) {
+          alert("Ocorrência registrada com sucesso!");
+          navigate("/vandalismo");
+        } else {
+          alert("Erro ao registrar ocorrência. Verifique os dados.");
+        }
+      })
+      .catch((error) => {
+        console.error("Erro:", error);
+        alert("Erro de conexão com o servidor.");
+      });
   };
 
   return (
@@ -79,6 +128,7 @@ export default function NovaOcorrencia() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
               label="Data do Acionamento"
+              required
               type="date"
               placeholder="Ex: 25/12/2024"
               value={formData.data_acionamento}
@@ -88,6 +138,7 @@ export default function NovaOcorrencia() {
             />
             <Input
               label="Hora do Acionamento"
+              required
               type="time"
               placeholder="00:00"
               value={formData.hora_acionamento}
@@ -97,6 +148,7 @@ export default function NovaOcorrencia() {
             />
             <Input
               label="Data do Vandalismo"
+              required
               type="date"
               placeholder="Ex: 25/12/2024"
               value={formData.data_vandalismo}
@@ -106,6 +158,7 @@ export default function NovaOcorrencia() {
             />
             <Input
               label="Hora do Vandalismo"
+              required
               type="time"
               placeholder="00:00"
               value={formData.hora_queda}
@@ -179,11 +232,16 @@ export default function NovaOcorrencia() {
                 className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="00000-000"
                 onBlur={checkCEP}
+                value={formData.cep}
+                onChange={(e) =>
+                  setFormData({ ...formData, cep: e.target.value })
+                }
               />
             </div>
             <div className="md:col-span-2">
               <Input
                 label="Rua"
+                required
                 value={formData.rua}
                 onChange={(e) =>
                   setFormData({ ...formData, rua: e.target.value })
@@ -192,6 +250,7 @@ export default function NovaOcorrencia() {
             </div>
             <Input
               label="Bairro"
+              required
               value={formData.bairro}
               onChange={(e) =>
                 setFormData({ ...formData, bairro: e.target.value })
@@ -199,6 +258,7 @@ export default function NovaOcorrencia() {
             />
             <Input
               label="Cidade"
+              required
               value={formData.cidade}
               onChange={(e) =>
                 setFormData({ ...formData, cidade: e.target.value })
@@ -206,6 +266,7 @@ export default function NovaOcorrencia() {
             />
             <Input
               label="UF"
+              required
               value={formData.uf}
               onChange={(e) => setFormData({ ...formData, uf: e.target.value })}
             />
@@ -223,10 +284,12 @@ export default function NovaOcorrencia() {
   );
 }
 
-function Input({ label, type = "text", placeholder, value, onChange, options }) {
+function Input({ label, type = "text", placeholder, value, onChange, options, required }) {
   return (
     <div className="space-y-1">
-      <label className="text-sm font-medium text-gray-700">{label}</label>
+      <label className="text-sm font-medium text-gray-700">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
       {options ? (
         <select
           value={value}

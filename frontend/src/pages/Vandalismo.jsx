@@ -15,9 +15,22 @@ export default function Vandalismo() {
   const [ocorrencias, setOcorrencias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("Todos");
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/ocorrencias")
+    setLoading(true);
+    const params = new URLSearchParams({
+      page: page,
+      size: 10, // 10 itens por página
+      sort: 'dataAcionamento,desc', // Ordena por data, mais recentes primeiro
+      searchTerm: searchTerm,
+      status: statusFilter,
+    });
+
+    fetch(`http://localhost:8080/api/ocorrencias?${params.toString()}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Falha ao buscar ocorrências");
@@ -25,14 +38,29 @@ export default function Vandalismo() {
         return res.json();
       })
       .then((data) => {
-        setOcorrencias(data);
+        setOcorrencias(data.content); // 'content' contém os itens da página atual
+        setTotalPages(data.totalPages); // Guarda o número total de páginas
         setLoading(false);
       })
       .catch((err) => {
         setError(err.message);
         setLoading(false);
       });
-  }, []);
+  }, [page, searchTerm, statusFilter]); // Refaz a busca quando a página ou os filtros mudam
+
+  // Reseta para a primeira página sempre que um filtro é alterado
+  useEffect(() => {
+    setPage(0);
+  }, [searchTerm, statusFilter]);
+
+  const handlePreviousPage = () => {
+    setPage((prevPage) => Math.max(prevPage - 1, 0));
+  };
+
+  const handleNextPage = () => {
+    setPage((prevPage) => Math.min(prevPage + 1, totalPages - 1));
+  };
+
   return (
     <div className="space-y-6">
       {/* CABEÇALHO DA PÁGINA */}
@@ -65,12 +93,19 @@ export default function Vandalismo() {
             type="text"
             placeholder="Buscar por rua, bairro ou cidade..."
             className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500 transition"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <select className="px-4 py-2 rounded-lg border border-gray-200 outline-none text-gray-600 bg-white">
-          <option>Local</option>
-          <option>Status</option>
-          <option>Fonte</option>
+        <select
+          className="px-4 py-2 rounded-lg border border-gray-200 outline-none text-gray-600 bg-white"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="Todos">Todos os Status</option>
+          <option value="Pendente">Pendente</option>
+          <option value="Em andamento">Em andamento</option>
+          <option value="Concluido">Concluído</option>
         </select>
       </div>
 
@@ -111,6 +146,28 @@ export default function Vandalismo() {
             </tbody>
           </table>
         </div>
+        {/* CONTROLES DE PAGINAÇÃO */}
+        {!loading && totalPages > 1 && (
+          <div className="flex justify-between items-center p-4 bg-gray-50 border-t border-gray-100">
+            <button
+              onClick={handlePreviousPage}
+              disabled={page === 0}
+              className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Anterior
+            </button>
+            <span className="text-sm text-gray-500">
+              Página {page + 1} de {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={page >= totalPages - 1}
+              className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Próximo
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -123,6 +180,7 @@ function VandalismoRow({ ocorrencia }) {
 
   const statusColors = {
     "Concluido": "text-green-600 bg-green-50 hover:bg-green-100",
+    "Concluida": "text-green-600 bg-green-50 hover:bg-green-100",
     "Em andamento": "text-orange-600 bg-orange-50 hover:bg-orange-100",
     "Pendente": "text-red-600 bg-red-50 hover:bg-red-100",
   };
@@ -140,7 +198,7 @@ function VandalismoRow({ ocorrencia }) {
 
   // Format date and time
   const dataFormatada = `${ocorrencia.dataAcionamento.split("-").reverse().join("/")} - ${ocorrencia.horaAcionamento}`;
-  const status = "Pendente"; // Placeholder, as it's not in the model
+  const status = ocorrencia.status || "Pendente";
 
   return (
     <tr className="hover:bg-gray-50 transition group">
@@ -186,13 +244,7 @@ function VandalismoRow({ ocorrencia }) {
             >
               <FileWarning size={16} /> Ver Dados
             </button>
-            <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 flex items-center gap-2">
-              <Settings size={16} /> Editar Dados
-            </button>
-            <div className="border-t border-gray-50 my-1"></div>
-            <button className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
-              <Trash2 size={16} /> Excluir Registro
-            </button>
+
           </div>
         )}
       </td>

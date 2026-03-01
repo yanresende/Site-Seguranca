@@ -25,6 +25,8 @@ export default function NovaOcorrencia() {
     numero: "",
   });
 
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
   // Função para buscar o CEP automaticamente
   const checkCEP = (e) => {
     const cep = e.target.value.replace(/\D/g, "");
@@ -82,7 +84,7 @@ export default function NovaOcorrencia() {
       status: "Pendente" // Define um status inicial padrão
     };
 
-    fetch("http://localhost:8080/api/ocorrencias", {
+    fetch(`${apiUrl}/api/ocorrencias`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),

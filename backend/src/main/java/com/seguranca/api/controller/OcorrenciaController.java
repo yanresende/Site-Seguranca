@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/ocorrencias")
-@CrossOrigin(origins = "http://localhost:5173") // Permite requisições do seu frontend
+@CrossOrigin(origins = "*") // Em produção, idealmente troque '*' pela URL do seu frontend no Railway
 public class OcorrenciaController {
 
     @Autowired

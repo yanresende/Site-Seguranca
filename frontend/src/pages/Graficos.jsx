@@ -24,10 +24,12 @@ export default function Graficos() {
     fim: defaultFim
   });
 
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
   const fetchStats = () => {
     setLoading(true);
     const params = new URLSearchParams(dates);
-    fetch(`http://localhost:8080/api/dashboard/stats?${params.toString()}`)
+    fetch(`${apiUrl}/api/dashboard/stats?${params.toString()}`)
       .then(res => res.json())
       .then(data => {
         setStats(data);

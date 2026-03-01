@@ -20,6 +20,8 @@ export default function Vandalismo() {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
   useEffect(() => {
     setLoading(true);
     const params = new URLSearchParams({
@@ -30,7 +32,7 @@ export default function Vandalismo() {
       status: statusFilter,
     });
 
-    fetch(`http://localhost:8080/api/ocorrencias?${params.toString()}`)
+    fetch(`${apiUrl}/api/ocorrencias?${params.toString()}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Falha ao buscar ocorrências");

@@ -24,6 +24,8 @@ export default function Dados() {
   const [formData, setFormData] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
   const statusColors = {
     Concluido: "bg-green-100 text-green-700",
     "Em andamento": "bg-orange-100 text-orange-700",
@@ -50,7 +52,7 @@ export default function Dados() {
     // Se você ainda não tem rotas com ID, pode testar fixo com ".../ocorrencias/1"
     const idBusca = id || 1;
 
-    fetch(`http://localhost:8080/api/ocorrencias/${idBusca}`)
+    fetch(`${apiUrl}/api/ocorrencias/${idBusca}`)
       .then((res) => {
         if (!res.ok) throw new Error("Erro na resposta da API");
         return res.json();
@@ -89,7 +91,7 @@ export default function Dados() {
 
     const idBusca = id || 1; // Garante que temos um ID
 
-    fetch(`http://localhost:8080/api/ocorrencias/${idBusca}/visitas`, {
+    fetch(`${apiUrl}/api/ocorrencias/${idBusca}/visitas`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -120,7 +122,7 @@ export default function Dados() {
     const ocorrenciaId = id || 1;
 
     fetch(
-      `http://localhost:8080/api/ocorrencias/${ocorrenciaId}/visitas/${visitaId}`,
+      `${apiUrl}/api/ocorrencias/${ocorrenciaId}/visitas/${visitaId}`,
       {
         method: "DELETE",
       },
@@ -153,7 +155,7 @@ export default function Dados() {
 
     const idToDelete = id || 1;
 
-    fetch(`http://localhost:8080/api/ocorrencias/${idToDelete}`, {
+    fetch(`${apiUrl}/api/ocorrencias/${idToDelete}`, {
       method: "DELETE",
     })
       .then((res) => {
@@ -191,7 +193,7 @@ export default function Dados() {
         : null,
     };
 
-    fetch(`http://localhost:8080/api/ocorrencias/${id}`, {
+    fetch(`${apiUrl}/api/ocorrencias/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),

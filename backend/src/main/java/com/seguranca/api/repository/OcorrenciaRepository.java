@@ -41,4 +41,7 @@ public interface OcorrenciaRepository extends JpaRepository<Ocorrencia, Long> {
 
     @Query("SELECT o.fonte, COUNT(o) FROM Ocorrencia o WHERE o.dataAcionamento BETWEEN :inicio AND :fim GROUP BY o.fonte")
     List<Object[]> countByFonteInDateRange(@Param("inicio") LocalDate inicio, @Param("fim") LocalDate fim);
+
+    @Query("SELECT o.rota, COUNT(o) FROM Ocorrencia o WHERE o.dataAcionamento BETWEEN :inicio AND :fim GROUP BY o.rota")
+    List<Object[]> countByRotaInDateRange(@Param("inicio") LocalDate inicio, @Param("fim") LocalDate fim);
 }

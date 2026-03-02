@@ -85,6 +85,16 @@ public class DashboardController {
         }
         stats.setPorFonte(fonteMap);
 
+        // 7. Ocorrências por Rota
+        List<Object[]> rotaCounts = repository.countByRotaInDateRange(dataInicio, dataFim);
+        Map<String, Long> rotaMap = new HashMap<>();
+        for (Object[] row : rotaCounts) {
+            String rota = (String) row[0];
+            Long count = (Long) row[1];
+            rotaMap.put(rota != null && !rota.isEmpty() ? rota : "Não especificada", count);
+        }
+        stats.setPorRota(rotaMap);
+
         return stats;
     }
 }

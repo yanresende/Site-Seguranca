@@ -11,6 +11,7 @@ import {
   Download,
   PieChart,
   Radio,
+  Route,
 } from "lucide-react";
 
 export default function Graficos() {
@@ -162,7 +163,7 @@ export default function Graficos() {
       {/* 3. Main Charts Area */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Nova Estatística: Ocorrências por Fonte */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
           <h3 className="font-bold text-gray-800 mb-6 flex items-center gap-2">
             <Radio size={18} className="text-cyan-500" /> Ocorrências por Fonte
           </h3>
@@ -174,6 +175,24 @@ export default function Graficos() {
                 percent={`${(count / stats.totalOcorrencias) * 100}%`}
                 count={count}
                 color="bg-cyan-500"
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Nova Estatística: Ocorrências por Rota */}
+        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <h3 className="font-bold text-gray-800 mb-6 flex items-center gap-2">
+            <Route size={18} className="text-teal-500" /> Ocorrências por Rota
+          </h3>
+          <div className="space-y-5">
+            {Object.entries(stats.porRota || {}).map(([rota, count]) => (
+              <ProgressBar
+                key={rota}
+                label={rota}
+                percent={`${(count / stats.totalOcorrencias) * 100}%`}
+                count={count}
+                color="bg-teal-500"
               />
             ))}
           </div>

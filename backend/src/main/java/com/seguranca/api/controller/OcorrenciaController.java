@@ -11,7 +11,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/ocorrencias")
@@ -110,5 +114,68 @@ public class OcorrenciaController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    // Endpoint para ESTATÍSTICAS (Dashboard)
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getStats(
+            @RequestParam(required = false) String inicio,
+            @RequestParam(required = false) String fim) {
+
+        List<Ocorrencia> all = ocorrenciaRepository.findAll();
+
+        // Filtrar por data de vandalismo se fornecido
+        if (inicio != null && fim != null && !inicio.isEmpty() && !fim.isEmpty()) {
+            LocalDate start = LocalDate.parse(inicio);
+            LocalDate end = LocalDate.parse(fim);
+            all = all.stream()
+                    .filter(o -> o.getDataVandalismo() != null &&
+                            !o.getDataVandalismo().isBefore(start) &&
+                            !o.getDataVandalismo().isAfter(end))
+                    .collect(Collectors.toList());
+        }
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalOcorrencias", all.size());
+
+        long concluidos = all.stream()
+                .filter(o -> "Concluido".equalsIgnoreCase(o.getStatus()))
+                .count();
+        stats.put("concluidos", concluidos);
+
+        // Por Status
+        Map<String, Long> porStatus = all.stream()
+                .filter(o -> o.getStatus() != null)
+                .collect(Collectors.groupingBy(Ocorrencia::getStatus, Collectors.counting()));
+        stats.put("porStatus", porStatus);
+
+        // Por Hora (usando horaQueda para refletir o horário real do incidente)
+        Map<String, Long> porHora = all.stream()
+                .filter(o -> o.getHoraQueda() != null)
+                .collect(Collectors.groupingBy(o -> {
+                    String time = o.getHoraQueda().toString();
+                    return time.length() >= 2 ? time.substring(0, 2) : "00";
+                }, Collectors.counting()));
+        stats.put("porHora", porHora);
+
+        // Por Bairro
+        Map<String, Long> porBairro = all.stream()
+                .filter(o -> o.getBairro() != null)
+                .collect(Collectors.groupingBy(Ocorrencia::getBairro, Collectors.counting()));
+        stats.put("porBairro", porBairro);
+
+        // Por Fonte
+        Map<String, Long> porFonte = all.stream()
+                .filter(o -> o.getFonte() != null)
+                .collect(Collectors.groupingBy(Ocorrencia::getFonte, Collectors.counting()));
+        stats.put("porFonte", porFonte);
+
+        // Por Rota
+        Map<String, Long> porRota = all.stream()
+                .filter(o -> o.getRota() != null)
+                .collect(Collectors.groupingBy(Ocorrencia::getRota, Collectors.counting()));
+        stats.put("porRota", porRota);
+
+        return ResponseEntity.ok(stats);
     }
 }

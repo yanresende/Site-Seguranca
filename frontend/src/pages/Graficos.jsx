@@ -30,7 +30,7 @@ export default function Graficos() {
   const fetchStats = () => {
     setLoading(true);
     const params = new URLSearchParams(dates);
-    fetch(`${apiUrl}/api/dashboard/stats?${params.toString()}`)
+    fetch(`${apiUrl}/api/ocorrencias/stats?${params.toString()}`)
       .then(res => res.json())
       .then(data => {
         setStats(data);

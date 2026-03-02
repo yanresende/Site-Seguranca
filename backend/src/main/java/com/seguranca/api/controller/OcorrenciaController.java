@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/ocorrencias")
-@CrossOrigin(origins = "*") // Em produção, idealmente troque '*' pela URL do seu frontend no Railway
+@CrossOrigin(origins = "${FRONTEND_URL:*}") // Pega a URL do frontend das variáveis de ambiente ou usa '*' como fallback
 public class OcorrenciaController {
 
     @Autowired

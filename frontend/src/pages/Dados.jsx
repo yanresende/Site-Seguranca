@@ -215,6 +215,26 @@ export default function Dados() {
       .finally(() => setIsSaving(false));
   };
 
+  // Função para buscar o CEP automaticamente
+  const checkCEP = (e) => {
+    const cep = e.target.value.replace(/\D/g, "");
+    if (cep.length === 8) {
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.erro) {
+            setFormData((prev) => ({
+              ...prev,
+              rua: data.logradouro,
+              bairro: data.bairro,
+              cidade: data.localidade,
+              uf: data.uf,
+            }));
+          }
+        });
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -476,6 +496,7 @@ export default function Dados() {
                       name="cep"
                       value={formData.cep}
                       onChange={handleChange}
+                      onBlur={checkCEP}
                     />
                     <EditableItem
                       label="Rua"
@@ -733,7 +754,7 @@ function DetailItem({ label, value }) {
   );
 }
 
-function EditableItem({ label, name, value, onChange, type = "text" }) {
+function EditableItem({ label, name, value, onChange, onBlur, type = "text" }) {
   return (
     <div>
       {label && (
@@ -755,6 +776,7 @@ function EditableItem({ label, name, value, onChange, type = "text" }) {
           name={name}
           value={value || ""}
           onChange={onChange}
+          onBlur={onBlur}
           className="w-full mt-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
         />
       )}

@@ -1,19 +1,74 @@
-import { useState } from 'react';
-import { User, Building, Bell, Shield, Save, Camera } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { User, Building, Bell, Shield, Save, Camera, Loader2 } from 'lucide-react';
+import styles from './Configuracoes.module.css';
 
 export default function Configuracoes() {
   const [activeTab, setActiveTab] = useState('perfil');
+  const [formData, setFormData] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
+  // Carrega os dados do usuário logado do localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setFormData(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = async () => {
+    if (!formData || !formData.id) {
+      alert("Dados do usuário não encontrados.");
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      // Nota: Você precisará criar este endpoint no seu backend!
+      const response = await fetch(`${apiUrl}/api/usuarios/${formData.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Falha ao salvar as alterações.");
+      }
+
+      const updatedUser = await response.json();
+      // Atualiza o estado e o localStorage
+      setFormData(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      alert("Perfil atualizado com sucesso!");
+
+    } catch (error) {
+      console.error("Erro ao salvar:", error);
+      alert(error.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (!formData) {
+    return <div className="flex justify-center items-center h-screen text-gray-500">Carregando...</div>;
+  }
 
   return (
-    <div className="space-y-6">
+    <div className={styles.container}>
       <div>
-        <h1 className="text-2xl font-bold text-gray-800">Configurações</h1>
-        <p className="text-gray-500">Gerencie seu perfil de acesso e preferências.</p>
+        <h1 className={styles.title}>Configurações</h1>
+        <p className={styles.subtitle}>Gerencie seu perfil de acesso e preferências.</p>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-8">
+      <div className={styles.mainLayout}>
         {/* MENU LATERAL DE CONFIGURAÇÕES */}
-        <aside className="w-full md:w-64 space-y-1">
+        <aside className={styles.sidebar}>
           <SettingsTab active={activeTab === 'perfil'} onClick={() => setActiveTab('perfil')} icon={<User size={18}/>} label="Meu Perfil" />
           <SettingsTab active={activeTab === 'clinica'} onClick={() => setActiveTab('clinica')} icon={<Building size={18}/>} label="Dados da Unidade" />
           <SettingsTab active={activeTab === 'notificacoes'} onClick={() => setActiveTab('notificacoes')} icon={<Bell size={18}/>} label="Notificações" />
@@ -21,18 +76,23 @@ export default function Configuracoes() {
         </aside>
 
         {/* ÁREA DE CONTEÚDO */}
-        <div className="flex-1 bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="p-8">
-            {activeTab === 'perfil' && <PerfilSection />}
+        <div className={styles.contentArea}>
+          <div className={styles.contentPadding}>
+            {activeTab === 'perfil' && <PerfilSection formData={formData} onChange={handleChange} />}
             {activeTab === 'clinica' && <div className="text-gray-500 italic">Configurações da unidade em breve...</div>}
             {activeTab === 'notificacoes' && <div className="text-gray-500 italic">Preferências de notificações em breve...</div>}
             {activeTab === 'seguranca' && <div className="text-gray-500 italic">Troca de senha em breve...</div>}
           </div>
           
-          <div className="bg-gray-50 px-8 py-4 flex justify-end gap-3 border-t border-gray-100">
-            <button className="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-200 rounded-xl transition">Descartar</button>
-            <button className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-xl text-sm font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-100">
-              <Save size={18} /> Salvar Alterações
+          <div className={styles.footer}>
+            <button className={styles.discardButton}>Descartar</button>
+            <button 
+              onClick={handleSave}
+              disabled={isSaving}
+              className={styles.saveButton}
+            >
+              {isSaving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+              {isSaving ? 'Salvando...' : 'Salvar Alterações'}
             </button>
           </div>
         </div>
@@ -46,8 +106,8 @@ function SettingsTab({ icon, label, active, onClick }) {
   return (
     <button 
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition ${
-        active ? 'bg-blue-600 text-white shadow-md shadow-blue-100' : 'text-gray-500 hover:bg-white hover:text-gray-700'
+      className={`${styles.tabButton} ${
+        active ? styles.tabActive : styles.tabInactive
       }`}
     >
       {icon} {label}
@@ -56,43 +116,45 @@ function SettingsTab({ icon, label, active, onClick }) {
 }
 
 // Seção de Perfil
-function PerfilSection() {
+function PerfilSection({ formData, onChange }) {
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
-      <div className="flex items-center gap-6">
-        <div className="relative group">
-          <div className="w-24 h-24 rounded-3xl bg-blue-50 flex items-center justify-center text-blue-600 border-2 border-dashed border-blue-200">
+    <div className={`${styles.perfilSection} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+      <div className={styles.avatarContainer}>
+        <div className={styles.avatarWrapper}>
+          <div className={styles.avatarPlaceholder}>
             <User size={40} />
           </div>
-          <button className="absolute -bottom-2 -right-2 p-2 bg-white rounded-lg shadow-md border border-gray-100 text-gray-600 hover:text-blue-600 transition">
+          <button className={styles.avatarUploadButton}>
             <Camera size={16} />
           </button>
         </div>
-        <div>
-          <h3 className="font-bold text-gray-800">Sua Foto</h3>
-          <p className="text-xs text-gray-400">PNG ou JPG de até 5MB.</p>
+        <div className={styles.avatarTextContainer}>
+          <h3 className={styles.avatarTitle}>Sua Foto</h3>
+          <p className={styles.avatarSubtitle}>PNG ou JPG de até 5MB.</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-1">
-          <label className="text-sm font-medium text-gray-700">Nome Completo</label>
-          <input type="text" className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500" defaultValue="Agente Yan Resende" />
+      <div className={styles.formGrid}>
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>Nome Completo</label>
+          <input type="text" name="nome" value={formData.nome || ''} onChange={onChange} className={styles.input} />
         </div>
-        <div className="space-y-1">
-          <label className="text-sm font-medium text-gray-700">Matrícula</label>
-          <input type="text" className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500" defaultValue="SEC-8829" />
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>Matrícula</label>
+          <input type="text" name="matricula" value={formData.matricula || 'N/A'} onChange={onChange} className={styles.input} disabled />
         </div>
-        <div className="space-y-1">
-          <label className="text-sm font-medium text-gray-700">E-mail</label>
-          <input type="email" className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500" defaultValue="yan@sentinela.com" />
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>E-mail</label>
+          <input type="email" name="email" value={formData.email || ''} onChange={onChange} className={styles.input} />
         </div>
-        <div className="space-y-1">
-          <label className="text-sm font-medium text-gray-700">Cargo / Posto</label>
-          <select className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-            <option>Chefe de Segurança</option>
-            <option>Monitoramento</option>
-            <option>Fiscal de Loja</option>
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>Cargo / Posto</label>
+          <select name="cargo" value={formData.cargo || ''} onChange={onChange} className={styles.select}>
+            <option value="">Selecione...</option>
+            <option value="Admin">Admin</option>
+            <option value="Chefe de Segurança">Chefe de Segurança</option>
+            <option value="Monitoramento">Monitoramento</option>
+            <option value="Fiscal de Loja">Fiscal de Loja</option>
           </select>
         </div>
       </div>

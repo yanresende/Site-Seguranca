@@ -219,19 +219,21 @@ export default function Dados() {
   const checkCEP = (e) => {
     const cep = e.target.value.replace(/\D/g, "");
     if (cep.length === 8) {
-      fetch(`https://viacep.com.br/ws/${cep}/json/`)
-        .then((res) => res.json())
+      fetch(`https://brasilapi.com.br/api/cep/v1/${cep}`)
+        .then((res) => {
+          if (!res.ok) throw new Error("CEP não encontrado");
+          return res.json();
+        })
         .then((data) => {
-          if (!data.erro) {
-            setFormData((prev) => ({
-              ...prev,
-              rua: data.logradouro,
-              bairro: data.bairro,
-              cidade: data.localidade,
-              uf: data.uf,
-            }));
-          }
-        });
+          setFormData((prev) => ({
+            ...prev,
+            rua: data.street,
+            bairro: data.neighborhood,
+            cidade: data.city,
+            uf: data.state,
+          }));
+        })
+        .catch((err) => console.error("Erro ao buscar CEP:", err.message));
     }
   };
 

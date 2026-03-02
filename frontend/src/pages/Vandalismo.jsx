@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import api from "../services/api"; // Importe o seu serviço
+import styles from "./Vandalismo.module.css";
 
 export default function Vandalismo() {
   const navigate = useNavigate();
@@ -59,20 +60,20 @@ export default function Vandalismo() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className={styles.container}>
       {/* CABEÇALHO DA PÁGINA */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className={styles.header}>
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">
+          <h1 className={styles.title}>
             Banco de Vandalismo
           </h1>
-          <p className="text-gray-500 text-sm">
+          <p className={styles.subtitle}>
             Gerencie os registros de incidentes e pessoas envolvidas.
           </p>
         </div>
         <button
           onClick={() => navigate("/vandalismo/novo")}
-          className="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md shadow-blue-100"
+          className={styles.newButton}
         >
           <Plus size={20} />
           Novo Registro
@@ -80,22 +81,22 @@ export default function Vandalismo() {
       </div>
 
       {/* BARRA DE FILTROS */}
-      <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex flex-col md:flex-row gap-4">
-        <div className="relative flex-1">
+      <div className={styles.filterBar}>
+        <div className={styles.searchContainer}>
           <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            className={styles.searchIcon}
             size={18}
           />
           <input
             type="text"
             placeholder="Buscar por rua, bairro ou cidade..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500 transition"
+            className={styles.searchInput}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <select
-          className="px-4 py-2 rounded-lg border border-gray-200 outline-none text-gray-600 bg-white"
+          className={styles.statusSelect}
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
         >
@@ -107,10 +108,10 @@ export default function Vandalismo() {
       </div>
 
       {/* TABELA DE VANDALISMO */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className={styles.tableContainer}>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-gray-50 text-gray-400 text-xs uppercase font-semibold">
+            <thead className={styles.tableHeader}>
               <tr>
                 <th className="px-6 py-4">Local</th>
                 <th className="px-6 py-4">Data Acionamento</th>
@@ -123,14 +124,14 @@ export default function Vandalismo() {
             <tbody className="divide-y divide-gray-50">
               {loading && (
                 <tr>
-                  <td colSpan="6" className="text-center py-8 text-gray-500">
+                  <td colSpan="6" className={styles.loadingText}>
                     Carregando...
                   </td>
                 </tr>
               )}
               {error && (
                 <tr>
-                  <td colSpan="6" className="text-center py-8 text-red-500">
+                  <td colSpan="6" className={styles.errorText}>
                     {error}
                   </td>
                 </tr>
@@ -145,7 +146,7 @@ export default function Vandalismo() {
         </div>
         {/* CONTROLES DE PAGINAÇÃO */}
         {!loading && totalPages > 1 && (
-          <div className="flex justify-between items-center p-4 bg-gray-50 border-t border-gray-100">
+          <div className={styles.paginationContainer}>
             <button
               onClick={handlePreviousPage}
               disabled={page === 0}

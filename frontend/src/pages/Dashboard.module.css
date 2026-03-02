@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+.container {
+  @apply space-y-8;
+}
+
+.header {
+  /* Container do título */
+}
+
+.title {
+  @apply text-2xl font-bold text-gray-800;
+}
+
+.subtitle {
+  @apply text-gray-500;
+}
+
+.kpiGrid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6;
+}
+
+.chartsGrid {
+  @apply grid grid-cols-1 lg:grid-cols-3 gap-6;
+}
+
+.card {
+  @apply bg-white p-6 rounded-2xl border border-gray-100 shadow-sm;
+}
+
+.cardTitle {
+  @apply font-bold text-gray-800 mb-6 flex items-center gap-2;
+}
+
+.listSpace {
+  @apply space-y-4;
+}
+
+.chartContainer {
+  @apply flex-1 flex items-end justify-between gap-2 px-2;
+}
+
+.chartLabel {
+  @apply text-xs text-center text-gray-400 mt-4;
+}
+
+.statItem {
+  @apply flex items-center justify-between p-3 bg-gray-50 rounded-xl;
+}
+
+.statIconGroup {
+  @apply flex items-center gap-3;
+}
+
+.statIconBox {
+  @apply p-2 rounded-lg;
+}
+
+.statLabel {
+  @apply text-sm font-medium text-gray-700;
+}
+
+.statValue {
+  @apply font-bold text-gray-800;
+}
+
+.tableContainer {
+  @apply bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden;
+}
+
+.tableHeader {
+  @apply p-6 border-b border-gray-50 flex justify-between items-center;
+}
+
+.tableTitle {
+  @apply font-bold text-gray-800;
+}
+
+.viewAllLink {
+  @apply text-sm text-blue-600 font-medium hover:underline;
+}
+
+.tableWrapper {
+  @apply overflow-x-auto;
+}
+
+.table {
+  @apply w-full text-left;
+}
+
+.thead {
+  @apply bg-gray-50 text-gray-400 text-xs uppercase font-semibold;
+}
+
+.tbody {
+  @apply divide-y divide-gray-50;
+}
+
+/* Componentes Auxiliares */
+.progressHeader {
+  @apply flex justify-between text-sm mb-1;
+}
+.progressLabel {
+  @apply font-medium text-gray-700;
+}
+.progressCount {
+  @apply text-gray-500;
+}
+.progressTrack {
+  @apply w-full bg-gray-100 rounded-full h-2.5;
+}
+.progressFill {
+  @apply h-2.5 rounded-full;
+}
+
+.barDayContainer {
+  @apply flex flex-col items-center gap-2 cursor-pointer;
+}
+.barDayWrapper {
+  @apply relative w-full flex justify-center;
+}
+.barDayBar {
+  @apply w-8 rounded-t-lg transition-all group-hover:opacity-80;
+}
+.barDayLabel {
+  @apply text-xs font-medium text-gray-500;
+}
+
+.tableRow {
+  @apply hover:bg-gray-50 transition;
+}
+.tdName {
+  @apply px-6 py-4 font-medium text-gray-700;
+}
+.td {
+  @apply px-6 py-4 text-gray-500;
+}
+.tdStatus {
+  @apply px-6 py-4;
+}
+.statusBadge {
+  @apply px-3 py-1 rounded-full text-xs font-medium;
+}

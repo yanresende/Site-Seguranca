@@ -13,6 +13,7 @@ import {
   Radio,
   Route,
 } from "lucide-react";
+import styles from "./Graficos.module.css";
 
 export default function Graficos() {
   const [stats, setStats] = useState(null);
@@ -47,7 +48,7 @@ export default function Graficos() {
   }, []);
 
   if (loading || !stats) {
-    return <div className="flex justify-center items-center h-screen text-gray-500">Carregando estatísticas...</div>;
+    return <div className={styles.loading}>Carregando estatísticas...</div>;
   }
 
   // Cálculos para exibição
@@ -92,48 +93,48 @@ export default function Graficos() {
   const topBairroName = topBairroEntry ? topBairroEntry[0] : "N/A";
 
   return (
-    <div className="space-y-8">
+    <div className={styles.container}>
       {/* 1. Header & Filters */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div className={styles.header}>
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">
+          <h1 className={styles.title}>
             Relatórios e Estatísticas
           </h1>
-          <p className="text-gray-500">
+          <p className={styles.subtitle}>
             Análise detalhada de segurança e incidentes.
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-2">
-          <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-gray-200 shadow-sm">
-            <span className="text-xs font-bold text-gray-400 uppercase ml-2">
+        <div className={styles.controls}>
+          <div className={styles.datePicker}>
+            <span className={styles.dateLabel}>
               Período:
             </span>
             <input
               type="date"
-              className="text-sm outline-none text-gray-600 bg-transparent"
+              className={styles.dateInput}
               value={dates.inicio}
               onChange={(e) => setDates({...dates, inicio: e.target.value})}
             />
-            <span className="text-gray-400">-</span>
+            <span className={styles.separator}>-</span>
             <input
               type="date"
-              className="text-sm outline-none text-gray-600 bg-transparent"
+              className={styles.dateInput}
               value={dates.fim}
               onChange={(e) => setDates({...dates, fim: e.target.value})}
             />
           </div>
-          <button onClick={fetchStats} className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium shadow-sm transition">
+          <button onClick={fetchStats} className={styles.btnApply}>
             <Filter size={18} /> Aplicar
           </button>
-          <button className="flex items-center gap-2 bg-blue-600 px-4 py-2 rounded-xl text-white hover:bg-blue-700 font-bold shadow-lg shadow-blue-100 transition">
+          <button className={styles.btnExport}>
             <Download size={18} /> Exportar PDF
           </button>
         </div>
       </div>
 
       {/* 2. KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className={styles.kpiGrid}>
         <StatsCard
           title="Total de Ocorrências"
           value={stats.totalOcorrencias}
@@ -161,13 +162,13 @@ export default function Graficos() {
       </div>
 
       {/* 3. Main Charts Area */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className={styles.mainGrid}>
         {/* Nova Estatística: Ocorrências por Fonte */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-          <h3 className="font-bold text-gray-800 mb-6 flex items-center gap-2">
+        <div className={styles.card}>
+          <h3 className={styles.cardTitle}>
             <Radio size={18} className="text-cyan-500" /> Ocorrências por Fonte
           </h3>
-          <div className="space-y-5">
+          <div className={styles.listSpace}>
             {Object.entries(stats.porFonte || {}).map(([fonte, count]) => (
               <ProgressBar
                 key={fonte}
@@ -181,11 +182,11 @@ export default function Graficos() {
         </div>
 
         {/* Nova Estatística: Ocorrências por Rota */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-          <h3 className="font-bold text-gray-800 mb-6 flex items-center gap-2">
+        <div className={styles.card}>
+          <h3 className={styles.cardTitle}>
             <Route size={18} className="text-teal-500" /> Ocorrências por Rota
           </h3>
-          <div className="space-y-5">
+          <div className={styles.listSpace}>
             {Object.entries(stats.porRota || {}).map(([rota, count]) => (
               <ProgressBar
                 key={rota}
@@ -199,26 +200,26 @@ export default function Graficos() {
         </div>
 
         {/* Chart 2: Distribution by Type */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-          <h3 className="font-bold text-gray-800 mb-6 flex items-center gap-2">
+        <div className={styles.card}>
+          <h3 className={styles.cardTitle}>
             <PieChart size={18} className="text-purple-500" /> Distribuição por
             Tipo
           </h3>
 
           {/* Gráfico de Pizza Simples (Visualização em Lista com Barras) */}
-          <div className="flex justify-center mb-6">
+          <div className={styles.pieContainer}>
             <div
-              className="w-48 h-48 rounded-full relative"
+              className={styles.pieCircle}
               style={{ background: conicGradient }}
             >
-              <div className="absolute inset-4 bg-white rounded-full flex items-center justify-center flex-col">
-                <span className="text-3xl font-bold text-gray-800">{stats.totalOcorrencias}</span>
-                <span className="text-xs text-gray-400">Total</span>
+              <div className={styles.pieInner}>
+                <span className={styles.pieNumber}>{stats.totalOcorrencias}</span>
+                <span className={styles.pieLabel}>Total</span>
               </div>
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className={styles.legendSpace}>
             {statusData.map(([status, count]) => (
               <LegendItem 
                 key={status}
@@ -232,13 +233,13 @@ export default function Graficos() {
       </div>
 
       {/* 4. Secondary Stats Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className={styles.secondaryGrid}>
         {/* Locais Críticos */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-          <h3 className="font-bold text-gray-800 mb-6 flex items-center gap-2">
+        <div className={styles.card}>
+          <h3 className={styles.cardTitle}>
             <MapPin size={18} className="text-red-500" /> Regiões com Mais Casos
           </h3>
-          <div className="space-y-5">
+          <div className={styles.listSpace}>
             {Object.entries(stats.porBairro || {}).slice(0, 5).map(([bairro, count]) => (
               <ProgressBar
                 key={bairro}
@@ -252,27 +253,27 @@ export default function Graficos() {
         </div>
 
         {/* Horários de Pico */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-          <h3 className="font-bold text-gray-800 mb-6 flex items-center gap-2">
+        <div className={styles.card}>
+          <h3 className={styles.cardTitle}>
             <Calendar size={18} className="text-indigo-500" /> Horários de Pico
           </h3>
-          <div className="h-64 flex items-end gap-1 px-1">
+          <div className={styles.chartContainer}>
             {peakHoursData.map((count, i) => {
               const height = (count / maxPeakCount) * 100;
               return (
                 <div
                   key={i}
-                  className="flex-1 bg-indigo-100 rounded-t-md relative group hover:bg-indigo-200 transition-all"
+                  className={`${styles.bar} group`}
                   style={{ height: `${height}%` }}
                 >
-                  <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded pointer-events-none whitespace-nowrap z-10">
+                  <div className={styles.tooltip}>
                     {i}h: {count}
                   </div>
                 </div>
               );
             })}
           </div>
-          <div className="flex justify-between text-xs text-gray-400 mt-2 px-1">
+          <div className={styles.axisX}>
             <span>00h</span>
             <span>06h</span>
             <span>12h</span>
@@ -289,9 +290,9 @@ export default function Graficos() {
 
 function LegendItem({ color, label, value }) {
   return (
-    <div className="flex items-center justify-between text-sm">
+    <div className="flex items-center justify-between text-sm"> {/* Mantido inline por simplicidade ou pode ir para CSS */}
       <div className="flex items-center gap-2">
-        <div className={`w-3 h-3 rounded-full ${color}`}></div>
+        <div className={`w-3 h-3 rounded-full ${color}`}></div> {/* Cor dinâmica */}
         <span className="text-gray-600">{label}</span>
       </div>
       <span className="font-bold text-gray-800">{value}</span>
@@ -302,12 +303,12 @@ function LegendItem({ color, label, value }) {
 function ProgressBar({ label, percent, count, color }) {
   return (
     <div>
-      <div className="flex justify-between text-sm mb-1">
+      <div className="flex justify-between text-sm mb-1"> {/* Mantido inline por simplicidade ou pode ir para CSS */}
         <span className="font-medium text-gray-700">{label}</span>
         <span className="text-gray-500">{count} casos</span>
       </div>
       <div className="w-full bg-gray-100 rounded-full h-2.5">
-        <div className={`h-2.5 rounded-full ${color}`} style={{ width: percent }}></div>
+        <div className={`h-2.5 rounded-full ${color}`} style={{ width: percent }}></div> {/* Cor dinâmica */}
       </div>
     </div>
   );

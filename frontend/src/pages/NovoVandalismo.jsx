@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Save, ArrowLeft, MapPin, User, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import styles from "./NovoVandalismo.module.css";
 
 export default function NovaOcorrencia() {
   const navigate = useNavigate();
@@ -107,30 +108,30 @@ export default function NovaOcorrencia() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className={styles.container}>
       {/* CABEÇALHO */}
-      <div className="flex items-center justify-between">
+      <div className={styles.header}>
         <button
           onClick={() => navigate("/vandalismo")}
-          className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition"
+          className={styles.backButton}
         >
           <ArrowLeft size={20} /> Voltar
         </button>
         <button
           onClick={handleSubmit}
-          className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-100"
+          className={styles.saveButton}
         >
           <Save size={20} /> Salvar Registro
         </button>
       </div>
 
-      <form className="space-y-6">
+      <form className={styles.form}>
         {/* SECÇÃO: Data e Hora */}
-        <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-          <div className="flex items-center gap-2 text-blue-600 font-bold mb-4">
+        <div className={styles.section}>
+          <div className={styles.sectionTitleBlue}>
             <User size={20} /> <span>Dados da Ocorrência</span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className={styles.grid2}>
             <Input
               label="Data do Acionamento"
               required
@@ -175,11 +176,11 @@ export default function NovaOcorrencia() {
         </div>
 
         {/* SECÇÃO: DADOS DA INFRAÇÃO */}
-        <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-          <div className="flex items-center gap-2 text-red-600 font-bold mb-4">
+        <div className={styles.section}>
+          <div className={styles.sectionTitleRed}>
             <AlertTriangle size={20} /> <span>Detalhes da Ocorrência</span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className={styles.grid2}>
             <Input
               label="Filmagem disponível?"
               options={["Sim", "Não"]}
@@ -232,17 +233,17 @@ export default function NovaOcorrencia() {
         </div>
 
         {/* SECÇÃO: ENDEREÇO */}
-        <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-          <div className="flex items-center gap-2 text-green-600 font-bold mb-4">
+        <div className={styles.section}>
+          <div className={styles.sectionTitleGreen}>
             <MapPin size={20} /> <span>Endereço</span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-gray-700">
+          <div className={styles.grid3}>
+            <div className={styles.inputContainer}>
+              <label className={styles.label}>
                 CEP (Busca automática)
               </label>
               <input
-                className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500"
+                className={styles.inputField}
                 placeholder="00000-000"
                 onBlur={checkCEP}
                 value={formData.cep}
@@ -299,15 +300,15 @@ export default function NovaOcorrencia() {
 
 function Input({ label, type = "text", placeholder, value, onChange, options, required }) {
   return (
-    <div className="space-y-1">
-      <label className="text-sm font-medium text-gray-700">
-        {label} {required && <span className="text-red-500">*</span>}
+    <div className={styles.inputContainer}>
+      <label className={styles.label}>
+        {label} {required && <span className={styles.required}>*</span>}
       </label>
       {options ? (
         <select
           value={value}
           onChange={onChange}
-          className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500 transition bg-white"
+          className={styles.inputField}
         >
           <option value="">Selecione...</option>
           {options.map((opt) => (
@@ -320,7 +321,7 @@ function Input({ label, type = "text", placeholder, value, onChange, options, re
           placeholder={placeholder}
           value={value}
           onChange={onChange}
-          className="w-full px-4 py-2 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500 transition"
+          className={styles.inputField}
         />
       )}
     </div>

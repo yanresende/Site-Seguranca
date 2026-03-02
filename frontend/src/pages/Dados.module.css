@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+    .container {
+  @apply space-y-6;
+}
+
+/* CABEÇALHO */
+.header {
+  @apply flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm;
+}
+
+.headerLeft {
+  @apply flex items-center gap-4;
+}
+
+.backButton {
+  @apply p-2 hover:bg-gray-100 rounded-full transition;
+}
+
+.iconContainer {
+  @apply w-16 h-16 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl font-bold;
+}
+
+.title {
+  @apply text-2xl font-bold text-gray-800;
+}
+
+.subtitle {
+  @apply text-sm text-gray-500;
+}
+
+.headerActions {
+  @apply flex gap-2;
+}
+
+.cancelButton {
+  @apply px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium hover:bg-gray-50 transition;
+}
+
+.saveButton {
+  @apply flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-xl text-sm font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-100 disabled:bg-blue-300;
+}
+
+.editButton {
+  @apply flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium hover:bg-gray-50 transition;
+}
+
+.deleteButton {
+  @apply flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-xl text-sm font-bold hover:bg-red-100 transition;
+}
+
+/* ABAS */
+.tabsContainer {
+  @apply flex gap-4 border-b border-gray-200;
+}
+
+.tabButton {
+  @apply flex items-center gap-2 px-4 py-3 border-b-2 transition-all font-medium text-sm;
+}
+
+.tabActive {
+  @apply border-blue-600 text-blue-600;
+}
+
+.tabInactive {
+  @apply border-transparent text-gray-500 hover:text-gray-700;
+}
+
+/* LAYOUT GERAL */
+.contentGrid {
+  @apply grid grid-cols-1 lg:grid-cols-3 gap-6;
+}
+
+.leftColumn {
+  @apply lg:col-span-2 space-y-6;
+}
+
+.rightColumn {
+  @apply space-y-6;
+}
+
+/* CARDS E SEÇÕES */
+.card {
+  @apply bg-white p-6 rounded-2xl border border-gray-100 shadow-sm;
+}
+
+.cardTitle {
+  @apply font-bold text-gray-800 mb-4 flex items-center gap-2;
+}
+
+.grid3 {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-4;
+}
+
+.grid2 {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
+
+/* ELEMENTOS DE FORMULÁRIO E INFO */
+.infoCard {
+  @apply bg-gray-50 p-4 rounded-xl border border-gray-100;
+}
+
+.label {
+  @apply text-xs font-medium text-gray-400 uppercase;
+}
+
+.input {
+  @apply w-full mt-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white;
+}
+
+.obsBox {
+  @apply text-gray-700 mt-1 bg-gray-50 p-3 rounded-lg text-sm;
+}
+
+/* VISITAS */
+.visitaForm {
+  @apply bg-gray-50 p-5 rounded-xl border border-gray-200 space-y-4;
+}
+
+.visitaInput {
+  @apply w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-green-500 bg-white;
+}
+
+.visitaAddButton {
+  @apply bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700 transition shadow-sm flex items-center gap-2;
+}
+
+.visitaItem {
+  @apply flex gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition bg-white;
+}
+
+.visitaDeleteButton {
+  @apply text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition self-start;
+}
+
+/* STATUS COLORS */
+.statusConcluido { @apply bg-green-100 text-green-700; }
+.statusEmAndamento { @apply bg-orange-100 text-orange-700; }
+.statusPendente { @apply bg-red-100 text-red-700; }
+.statusDefault { @apply bg-gray-100 text-gray-700; }

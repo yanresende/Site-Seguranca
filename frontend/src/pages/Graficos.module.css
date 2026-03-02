@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+.container {
+  @apply space-y-8;
+}
+
+/* HEADER E FILTROS */
+.header {
+  @apply flex flex-col md:flex-row md:items-end justify-between gap-4;
+}
+
+.title {
+  @apply text-2xl font-bold text-gray-800;
+}
+
+.subtitle {
+  @apply text-gray-500;
+}
+
+.controls {
+  @apply flex flex-col md:flex-row gap-2;
+}
+
+.datePicker {
+  @apply flex items-center gap-2 bg-white p-2 rounded-xl border border-gray-200 shadow-sm;
+}
+
+.dateLabel {
+  @apply text-xs font-bold text-gray-400 uppercase ml-2;
+}
+
+.dateInput {
+  @apply text-sm outline-none text-gray-600 bg-transparent;
+}
+
+.separator {
+  @apply text-gray-400;
+}
+
+.btnApply {
+  @apply flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium shadow-sm transition;
+}
+
+.btnExport {
+  @apply flex items-center gap-2 bg-blue-600 px-4 py-2 rounded-xl text-white hover:bg-blue-700 font-bold shadow-lg shadow-blue-100 transition;
+}
+
+/* GRIDS DE LAYOUT */
+.kpiGrid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6;
+}
+
+.mainGrid {
+  @apply grid grid-cols-1 lg:grid-cols-3 gap-6;
+}
+
+.secondaryGrid {
+  @apply grid grid-cols-1 lg:grid-cols-2 gap-6;
+}
+
+/* CARDS E CONTEÚDO */
+.card {
+  @apply bg-white p-6 rounded-2xl border border-gray-100 shadow-sm;
+}
+
+.cardTitle {
+  @apply font-bold text-gray-800 mb-6 flex items-center gap-2;
+}
+
+.listSpace {
+  @apply space-y-5;
+}
+
+/* GRÁFICO DE PIZZA */
+.pieContainer {
+  @apply flex justify-center mb-6;
+}
+
+.pieCircle {
+  @apply w-48 h-48 rounded-full relative;
+}
+
+.pieInner {
+  @apply absolute inset-4 bg-white rounded-full flex items-center justify-center flex-col;
+}
+
+.pieNumber {
+  @apply text-3xl font-bold text-gray-800;
+}
+
+.pieLabel {
+  @apply text-xs text-gray-400;
+}
+
+.legendSpace {
+  @apply space-y-3;
+}
+
+/* GRÁFICO DE BARRAS (HORÁRIOS) */
+.chartContainer {
+  @apply h-64 flex items-end gap-1 px-1;
+}
+
+.bar {
+  @apply flex-1 bg-indigo-100 rounded-t-md relative hover:bg-indigo-200 transition-all;
+}
+
+.tooltip {
+  @apply opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded pointer-events-none whitespace-nowrap z-10;
+}
+
+.axisX {
+  @apply flex justify-between text-xs text-gray-400 mt-2 px-1;
+}
+
+/* LOADING */
+.loading {
+  @apply flex justify-center items-center h-screen text-gray-500;
+}

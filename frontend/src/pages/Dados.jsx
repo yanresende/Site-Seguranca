@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Save } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import styles from "./Dados.module.css";
 
 export default function Dados() {
   const navigate = useNavigate();
@@ -27,9 +28,9 @@ export default function Dados() {
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
   const statusColors = {
-    Concluido: "bg-green-100 text-green-700",
-    "Em andamento": "bg-orange-100 text-orange-700",
-    Pendente: "bg-red-100 text-red-700",
+    Concluido: styles.statusConcluido,
+    "Em andamento": styles.statusEmAndamento,
+    Pendente: styles.statusPendente,
   };
 
   // Estado para gerenciar as visitas técnicas
@@ -259,41 +260,41 @@ export default function Dados() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className={styles.container}>
       {/* CABEÇALHO */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-        <div className="flex items-center gap-4">
+      <div className={styles.header}>
+        <div className={styles.headerLeft}>
           <button
             onClick={() => navigate("/vandalismo")}
-            className="p-2 hover:bg-gray-100 rounded-full transition"
+            className={styles.backButton}
           >
             <ArrowLeft size={20} className="text-gray-500" />
           </button>
-          <div className="w-16 h-16 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl font-bold">
+          <div className={styles.iconContainer}>
             <MapPin size={32} />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">
+            <h1 className={styles.title}>
               {dados.rua}, {dados.numero}
             </h1>
-            <p className="text-sm text-gray-500">
+            <p className={styles.subtitle}>
               {dados.bairro}, {dados.cidade} - {dados.uf}
             </p>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className={styles.headerActions}>
           {isEditing ? (
             <>
               <button
                 onClick={() => setIsEditing(false)}
-                className="px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium hover:bg-gray-50 transition"
+                className={styles.cancelButton}
               >
                 Cancelar
               </button>
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-xl text-sm font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-100 disabled:bg-blue-300"
+                className={styles.saveButton}
               >
                 <Save size={18} /> {isSaving ? "Salvando..." : "Salvar"}
               </button>
@@ -301,14 +302,14 @@ export default function Dados() {
           ) : (
             <button
               onClick={() => setIsEditing(true)}
-              className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium hover:bg-gray-50 transition"
+              className={styles.editButton}
             >
               <Edit size={18} /> Editar
             </button>
           )}
           <button
             onClick={handleDeleteOcorrencia}
-            className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-xl text-sm font-bold hover:bg-red-100 transition"
+            className={styles.deleteButton}
             disabled={isEditing}
           >
             <Trash2 size={18} /> Excluir
@@ -317,7 +318,7 @@ export default function Dados() {
       </div>
 
       {/* NAVEGAÇÃO POR ABAS */}
-      <div className="flex gap-4 border-b border-gray-200">
+      <div className={styles.tabsContainer}>
         <TabButton
           id="detalhes"
           label="Detalhes da Ocorrência"
@@ -342,17 +343,17 @@ export default function Dados() {
       </div>
 
       {/* CONTEÚDO DAS ABAS */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className={styles.contentGrid}>
         {/* COLUNA DA ESQUERDA */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className={styles.leftColumn}>
           {activeTab === "detalhes" && (
             <>
               {/* CRONOLOGIA */}
-              <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <div className={styles.card}>
+                <h3 className={styles.cardTitle}>
                   <Clock size={18} className="text-blue-600" /> Cronologia
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className={styles.grid3}>
                   {isEditing ? (
                     <>
                       <EditableInfoCard
@@ -398,23 +399,23 @@ export default function Dados() {
               </div>
 
               {/* INFORMAÇÕES */}
-              <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-                <h3 className="font-bold text-gray-800 mb-2 flex items-center gap-2">
+              <div className={`${styles.card} space-y-4`}>
+                <h3 className={styles.cardTitle}>
                   <FileText size={18} className="text-orange-600" /> Informações
                   do Registro
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className={styles.grid2}>
                   {isEditing ? (
                     <>
                       <div>
-                        <span className="text-xs font-medium text-gray-400 uppercase">
+                        <span className={styles.label}>
                           Status
                         </span>
                         <select
                           name="status"
                           value={formData.status || "Pendente"}
                           onChange={handleChange}
-                          className="w-full mt-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                          className={styles.input}
                         >
                           <option value="Pendente">Pendente</option>
                           <option value="Em andamento">Em andamento</option>
@@ -428,14 +429,14 @@ export default function Dados() {
                         onChange={handleChange}
                       />
                       <div>
-                        <span className="text-xs font-medium text-gray-400 uppercase">
+                        <span className={styles.label}>
                           Fonte
                         </span>
                         <select
                           name="fonte"
                           value={formData.fonte || ""}
                           onChange={handleChange}
-                          className="w-full mt-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                          className={styles.input}
                         >
                           <option value="">Selecione...</option>
                           <option value="Grupo Crise">Grupo Crise</option>
@@ -445,14 +446,14 @@ export default function Dados() {
                         </select>
                       </div>
                       <div>
-                        <span className="text-xs font-medium text-gray-400 uppercase">
+                        <span className={styles.label}>
                           Rota
                         </span>
                         <select
                           name="rota"
                           value={formData.rota || ""}
                           onChange={handleChange}
-                          className="w-full mt-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                          className={styles.input}
                         >
                           <option value="">Selecione...</option>
                           <option value="Em Rota">Em Rota</option>
@@ -472,12 +473,12 @@ export default function Dados() {
                   ) : (
                     <>
                       <div>
-                        <span className="text-xs font-medium text-gray-400 uppercase">
+                        <span className={styles.label}>
                           Status
                         </span>
                         <div className="mt-1">
                           <span
-                            className={`px-3 py-1 rounded-full text-xs font-bold ${statusColors[dados.status] || "bg-gray-100 text-gray-700"}`}
+                            className={`px-3 py-1 rounded-full text-xs font-bold ${statusColors[dados.status] || styles.statusDefault}`}
                           >
                             {dados.status || "Pendente"}
                           </span>
@@ -487,10 +488,10 @@ export default function Dados() {
                       <DetailItem label="Fonte" value={dados.fonte} />
                       <DetailItem label="Rota" value={dados.rota} />
                       <div className="md:col-span-2">
-                        <span className="text-xs font-medium text-gray-400 uppercase">
+                        <span className={styles.label}>
                           Observações
                         </span>
-                        <p className="text-gray-700 mt-1 bg-gray-50 p-3 rounded-lg text-sm">
+                        <p className={styles.obsBox}>
                           {dados.observacoes}
                         </p>
                       </div>
@@ -502,11 +503,11 @@ export default function Dados() {
           )}
 
           {activeTab === "endereco" && (
-            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm animate-in fade-in duration-300">
-              <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <div className={`${styles.card} animate-in fade-in duration-300`}>
+              <h3 className={styles.cardTitle}>
                 <MapPin size={18} className="text-green-600" /> Localização
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className={styles.grid2}>
                 {isEditing ? (
                   <>
                     <EditableItem
@@ -561,8 +562,8 @@ export default function Dados() {
             </div>
           )}
           {activeTab === "visita" && (
-            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6 animate-in fade-in duration-300">
-              <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <div className={`${styles.card} space-y-6 animate-in fade-in duration-300`}>
+              <h3 className={styles.cardTitle}>
                 <Clock size={18} className="text-green-600" /> Histórico de
                 Visitas Técnicas
               </h3>
@@ -570,12 +571,12 @@ export default function Dados() {
               {/* Formulário de Adição */}
               <form
                 onSubmit={adicionarVisita}
-                className="bg-gray-50 p-5 rounded-xl border border-gray-200 space-y-4"
+                className={styles.visitaForm}
               >
-                <div className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                <div className={styles.visitaFormTitle}>
                   <Plus size={16} className="text-green-600" /> Nova Visita
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className={styles.grid2}>
                   <div className="space-y-1">
                     <label className="text-xs font-medium text-gray-500">
                       Data
@@ -583,7 +584,7 @@ export default function Dados() {
                     <input
                       type="date"
                       required
-                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-green-500 bg-white"
+                      className={styles.visitaInput}
                       value={novaVisita.data}
                       onChange={(e) =>
                         setNovaVisita({ ...novaVisita, data: e.target.value })
@@ -597,7 +598,7 @@ export default function Dados() {
                     <input
                       type="time"
                       required
-                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-green-500 bg-white"
+                      className={styles.visitaInput}
                       value={novaVisita.hora}
                       onChange={(e) =>
                         setNovaVisita({ ...novaVisita, hora: e.target.value })
@@ -611,7 +612,7 @@ export default function Dados() {
                   </label>
                   <textarea
                     required
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-green-500 bg-white resize-none"
+                    className={`${styles.visitaInput} resize-none`}
                     rows="2"
                     placeholder="Descreva o que foi realizado..."
                     value={novaVisita.registro}
@@ -623,7 +624,7 @@ export default function Dados() {
                 <div className="flex justify-end">
                   <button
                     type="submit"
-                    className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700 transition shadow-sm flex items-center gap-2"
+                    className={styles.visitaAddButton}
                   >
                     <Plus size={16} /> Adicionar
                   </button>
@@ -640,7 +641,7 @@ export default function Dados() {
                   visitas.map((v) => (
                     <div
                       key={v.id}
-                      className="flex gap-4 p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition group bg-white"
+                      className={`${styles.visitaItem} group`}
                     >
                       <div className="flex flex-col items-center min-w-[80px]">
                         <div className="bg-green-50 text-green-700 text-xs font-bold px-2 py-1 rounded-md mb-1">
@@ -657,7 +658,7 @@ export default function Dados() {
                       </div>
                       <button
                         onClick={() => handleDeleteVisita(v.id)}
-                        className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition self-start"
+                        className={styles.visitaDeleteButton}
                         title="Remover visita"
                       >
                         <Trash2 size={16} />
@@ -671,9 +672,9 @@ export default function Dados() {
         </div>
 
         {/* COLUNA DA DIREITA: RESUMO FIXO */}
-        <div className="space-y-6">
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-            <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <div className={styles.rightColumn}>
+          <div className={styles.card}>
+            <h3 className={styles.cardTitle}>
               <Video size={18} className="text-purple-600" /> Mídia e Evidências
             </h3>
             <div className="space-y-4">
@@ -691,14 +692,14 @@ export default function Dados() {
                   </select>
                 ) : (
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-bold ${dados.filmagem === "Sim" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+                    className={`px-3 py-1 rounded-full text-xs font-bold ${dados.filmagem === "Sim" ? styles.statusConcluido : styles.statusPendente}`}
                   >
                     {dados.filmagem}
                   </span>
                 )}
               </div>
               <div>
-                <span className="text-xs font-medium text-gray-400 uppercase mb-2 block">
+                <span className={`${styles.label} mb-2 block`}>
                   Link das Fotos
                 </span>
                 {isEditing ? (
@@ -734,10 +735,10 @@ function TabButton({ id, label, activeTab, setActiveTab, icon }) {
   return (
     <button
       onClick={() => setActiveTab(id)}
-      className={`flex items-center gap-2 px-4 py-3 border-b-2 transition-all font-medium text-sm ${
+      className={`${styles.tabButton} ${
         active
-          ? "border-blue-600 text-blue-600"
-          : "border-transparent text-gray-500 hover:text-gray-700"
+          ? styles.tabActive
+          : styles.tabInactive
       }`}
     >
       {icon} {label}
@@ -747,7 +748,7 @@ function TabButton({ id, label, activeTab, setActiveTab, icon }) {
 
 function InfoCard({ label, date, time }) {
   return (
-    <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+    <div className={styles.infoCard}>
       <span className="text-xs font-bold text-gray-400 uppercase block mb-1">
         {label}
       </span>
@@ -764,7 +765,7 @@ function InfoCard({ label, date, time }) {
 function DetailItem({ label, value }) {
   return (
     <div>
-      <span className="text-xs font-medium text-gray-400 uppercase">
+      <span className={styles.label}>
         {label}
       </span>
       <p className="text-gray-700 font-medium mt-1">{value || "N/A"}</p>
@@ -776,7 +777,7 @@ function EditableItem({ label, name, value, onChange, onBlur, type = "text" }) {
   return (
     <div>
       {label && (
-        <span className="text-xs font-medium text-gray-400 uppercase">
+        <span className={styles.label}>
           {label}
         </span>
       )}
@@ -786,7 +787,7 @@ function EditableItem({ label, name, value, onChange, onBlur, type = "text" }) {
           value={value || ""}
           onChange={onChange}
           rows="3"
-          className="w-full mt-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          className={styles.input}
         />
       ) : (
         <input
@@ -795,7 +796,7 @@ function EditableItem({ label, name, value, onChange, onBlur, type = "text" }) {
           value={value || ""}
           onChange={onChange}
           onBlur={onBlur}
-          className="w-full mt-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          className={styles.input}
         />
       )}
     </div>
@@ -804,7 +805,7 @@ function EditableItem({ label, name, value, onChange, onBlur, type = "text" }) {
 
 function EditableInfoCard({ label, dateName, timeName, value, onChange }) {
   return (
-    <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 space-y-2">
+    <div className={`${styles.infoCard} space-y-2`}>
       <span className="text-xs font-bold text-gray-400 uppercase block">
         {label} <span className="text-red-500">*</span>
       </span>

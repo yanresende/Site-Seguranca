@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 
 @RestController
 @RequestMapping("/api/dashboard")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "${FRONTEND_URL:*}")
 public class DashboardController {
 
     @Autowired

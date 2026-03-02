@@ -80,6 +80,7 @@ export default function NovaOcorrencia() {
       observacoes: formData.observacoes,
       filmagem: formData.filmagem,
       fonte: formData.fonte,
+      rota: formData.rota,
       fotografico: formData.fotografico,
       status: "Pendente" // Define um status inicial padrão
     };
@@ -199,6 +200,14 @@ export default function NovaOcorrencia() {
               value={formData.fonte}
               onChange={(e) =>
                 setFormData({ ...formData, fonte: e.target.value })
+              }
+            />
+            <Input
+              label="Rota?"
+              options={["Sim", "Não"]}
+              value={formData.rota}
+              onChange={(e) =>
+                setFormData({ ...formData, rota: e.target.value })
               }
             />
             <Input

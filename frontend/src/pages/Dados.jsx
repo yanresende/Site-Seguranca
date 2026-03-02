@@ -442,6 +442,21 @@ export default function Dados() {
                           </option>
                         </select>
                       </div>
+                      <div>
+                        <span className="text-xs font-medium text-gray-400 uppercase">
+                          Rota
+                        </span>
+                        <select
+                          name="rota"
+                          value={formData.rota || ""}
+                          onChange={handleChange}
+                          className="w-full mt-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                        >
+                          <option value="">Selecione...</option>
+                          <option value="Sim">Sim</option>
+                          <option value="Não">Não</option>
+                        </select>
+                      </div>
                       <div className="md:col-span-2">
                         <EditableItem
                           label="Observações"
@@ -468,6 +483,7 @@ export default function Dados() {
                       </div>
                       <DetailItem label="Causa Real" value={dados.causaReal} />
                       <DetailItem label="Fonte" value={dados.fonte} />
+                      <DetailItem label="Rota" value={dados.rota} />
                       <div className="md:col-span-2">
                         <span className="text-xs font-medium text-gray-400 uppercase">
                           Observações

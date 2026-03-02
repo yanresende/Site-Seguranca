@@ -7,6 +7,7 @@ import {
   FileWarning,
   Settings,
   Trash2,
+  ExternalLink,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import api from "../services/api"; // Importe o seu serviço
@@ -220,7 +221,20 @@ function VandalismoRow({ ocorrencia }) {
         {ocorrencia.observacoes}
       </td>
       <td className="px-6 py-4 text-sm text-gray-500">{ocorrencia.fonte}</td>
-      <td className="px-6 py-4 text-sm text-gray-500">{ocorrencia.fotografico}</td>
+      <td className="px-6 py-4 text-sm text-gray-500">
+        {ocorrencia.fotografico ? (
+          <a
+            href={ocorrencia.fotografico}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline flex items-center gap-1"
+          >
+            <ExternalLink size={14} /> Abrir
+          </a>
+        ) : (
+          <span className="text-gray-400">-</span>
+        )}
+      </td>
 
 
       {/* BOTÃO DE AÇÃO COM MENU DROP DOWN */}

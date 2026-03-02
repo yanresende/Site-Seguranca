@@ -66,6 +66,7 @@ public class OcorrenciaController {
                     existingOcorrencia.setFonte(ocorrenciaDetails.getFonte());
                     existingOcorrencia.setFotografico(ocorrenciaDetails.getFotografico());
                     existingOcorrencia.setStatus(ocorrenciaDetails.getStatus());
+                    existingOcorrencia.setRota(ocorrenciaDetails.getRota());
 
                     Ocorrencia updatedOcorrencia = ocorrenciaRepository.save(existingOcorrencia);
                     return ResponseEntity.ok(updatedOcorrencia);

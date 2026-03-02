@@ -40,6 +40,7 @@ public class Ocorrencia {
 
     private String filmagem;
     private String fonte;
+    private String rota;
     private String status;
     private String fotografico;
 
@@ -58,6 +59,10 @@ public class Ocorrencia {
     }
 
     // ===== SETTERS =====
+
+    public void setRota(String rota) {
+        this.rota = rota;
+    }
 
     public void setRua(String rua) {
         this.rua = rua;
@@ -129,6 +134,10 @@ public class Ocorrencia {
 
     public Long getId() {
         return id;
+    }
+
+    public String getRota() {
+        return rota;
     }
 
     public String getRua() {

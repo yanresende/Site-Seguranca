@@ -1,66 +1,108 @@
-import { Shield } from "lucide-react";
+import { useState } from "react";
+import { Shield, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import styles from "./Login.module.css";
 
 export default function Login() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // No futuro, chamada para o Backend Spring Boot
-    navigate("/dashboard");
+    setError("");
+    setLoading(true);
+
+    try {
+      // Simulação de chamada ao backend (ajuste a URL conforme sua API real)
+      const response = await fetch(`${apiUrl}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, senha }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Salva o token para uso futuro (ex: Authorization header)
+        if (data.token) localStorage.setItem("token", data.token);
+        if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
+
+        navigate("/dashboard");
+      } else {
+        // Tenta ler a mensagem de erro do backend
+        const errData = await response.json().catch(() => ({}));
+        setError(errData.message || "Credenciais inválidas. Tente novamente.");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Erro de conexão com o servidor.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-10 space-y-8 border border-gray-100">
-        <div className="text-center">
-          <div className="inline-flex p-4 bg-blue-600 rounded-2xl text-white mb-4">
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <div className={styles.header}>
+          <div className={styles.logoContainer}>
             <Shield size={32} />
           </div>
-          <h2 className="text-3xl font-extrabold text-gray-900 italic">
+          <h2 className={styles.title}>
             Sentinela
           </h2>
-          <p className="mt-2 text-sm text-gray-500">
+          <p className={styles.subtitle}>
             Sistema de Segurança
           </p>
         </div>
 
-        <form className="space-y-6" onSubmit={handleLogin}>
+        <form className={styles.form} onSubmit={handleLogin}>
+          {error && <div className={styles.errorMessage}>{error}</div>}
+          
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className={styles.label}>
               ID Funcional / E-mail
             </label>
             <input
               type="email"
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+              className={styles.input}
               placeholder="agente.silva@sentinela.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className={styles.label}>
               Senha
             </label>
             <input
               type="password"
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+              className={styles.input}
               placeholder="••••••••"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
             />
           </div>
 
-          <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center text-gray-500">
+          <div className={styles.optionsRow}>
+            <label className={styles.rememberLabel}>
               <input
                 type="checkbox"
-                className="mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className={styles.checkbox}
               />
               Lembrar-me
             </label>
             <a
               href="#"
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className={styles.forgotLink}
             >
               Esqueceu a senha?
             </a>
@@ -68,13 +110,20 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transform active:scale-95 transition-all shadow-lg shadow-blue-200"
+            disabled={loading}
+            className={styles.button}
           >
-            Entrar no Sistema
+            {loading ? (
+              <>
+                <Loader2 size={20} className="animate-spin" /> Entrando...
+              </>
+            ) : (
+              "Entrar no Sistema"
+            )}
           </button>
         </form>
 
-        <p className="text-center text-xs text-gray-400 mt-8">
+        <p className={styles.footer}>
           &copy; 2026 Sentinela Security. Todos os direitos reservados.
         </p>
       </div>

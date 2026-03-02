@@ -9,6 +9,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import api from "../services/api"; // Importe o seu serviço
 
 export default function Vandalismo() {
   const navigate = useNavigate();
@@ -20,8 +21,6 @@ export default function Vandalismo() {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
-  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
-
   useEffect(() => {
     setLoading(true);
     const params = new URLSearchParams({
@@ -32,16 +31,11 @@ export default function Vandalismo() {
       status: statusFilter,
     });
 
-    fetch(`${apiUrl}/api/ocorrencias?${params.toString()}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Falha ao buscar ocorrências");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setOcorrencias(data.content); // 'content' contém os itens da página atual
-        setTotalPages(data.totalPages); // Guarda o número total de páginas
+    // Usa o 'api' em vez de 'fetch'. O axios já trata o JSON automaticamente.
+    api.get(`/api/ocorrencias?${params.toString()}`)
+      .then((response) => {
+        setOcorrencias(response.data.content);
+        setTotalPages(response.data.totalPages);
         setLoading(false);
       })
       .catch((err) => {
@@ -227,7 +221,7 @@ function VandalismoRow({ ocorrencia }) {
       </td>
       <td className="px-6 py-4 text-sm text-gray-500">{ocorrencia.fonte}</td>
       <td className="px-6 py-4 text-sm text-gray-500">{ocorrencia.fotografico}</td>
-      
+
 
       {/* BOTÃO DE AÇÃO COM MENU DROP DOWN */}
       <td className="px-6 py-4 text-center relative" ref={menuRef}>

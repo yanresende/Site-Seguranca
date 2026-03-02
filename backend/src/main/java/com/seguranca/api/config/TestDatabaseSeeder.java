@@ -45,7 +45,7 @@ public class TestDatabaseSeeder {
                 ocorrencia2.setHoraAcionamento(LocalTime.now());
                 ocorrencia2.setFilmagem("Sim");
                 ocorrencia2.setObservacoes("Registro de teste automático");
-                ocorrencia2.setStatus("Concluida");
+                ocorrencia2.setStatus("Concluido");
 
                 // 2. Criar Visitas
                 Visita visita1 = new Visita();

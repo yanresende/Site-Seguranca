@@ -203,8 +203,8 @@ export default function NovaOcorrencia() {
               }
             />
             <Input
-              label="Rota?"
-              options={["Sim", "Não"]}
+              label="Rota"
+              options={["Em Rota", "Fora de Rota"]}
               value={formData.rota}
               onChange={(e) =>
                 setFormData({ ...formData, rota: e.target.value })

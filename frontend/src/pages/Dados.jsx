@@ -453,8 +453,8 @@ export default function Dados() {
                           className="w-full mt-1 px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                         >
                           <option value="">Selecione...</option>
-                          <option value="Sim">Sim</option>
-                          <option value="Não">Não</option>
+                          <option value="Em Rota">Em Rota</option>
+                          <option value="Fora de Rota">Fora de Rota</option>
                         </select>
                       </div>
                       <div className="md:col-span-2">

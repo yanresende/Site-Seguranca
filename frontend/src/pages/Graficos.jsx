@@ -63,7 +63,6 @@ export default function Graficos() {
   };
   const statusBgColors = {
     "Concluido": "bg-green-500",
-    "Concluida": "bg-green-500",
     "Pendente": "bg-red-500",
     "Em andamento": "bg-orange-500"
   };

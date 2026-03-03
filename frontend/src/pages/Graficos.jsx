@@ -265,9 +265,10 @@ export default function Graficos() {
                   key={i}
                   className={`${styles.bar} group`}
                   style={{ height: `${height}%` }}
+                  title={`${i}h: ${count} ocorrência(s)`}
                 >
                   <div className={styles.tooltip}>
-                    {i}h: {count}
+                    {i}h: {count} ocorrência(s)
                   </div>
                 </div>
               );

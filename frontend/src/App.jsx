@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import ProtectedRoute from './components/ProtectedRoute';
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
@@ -23,21 +24,26 @@ function App() {
 
         {/* Todas as rotas abaixo terão a Sidebar */}
 
-        <Route element={<Layout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/suspeitos" element={<Suspeitos />} />
-          <Route path="/tecnico" element={<Tecnico />} />
-          <Route path="/vandalismo" element={<Vandalismo />} />
-          <Route path="/config" element={<Configuracoes />} />
-          <Route path="/suspeitos/novo" element={<NovaOcorrencia />} />
-          <Route path="/vandalismo/novo" element={<NovoVandalismo />} />
-          <Route path="/suspeitos/ficha" element={<Ficha />} />
-          <Route path="/vandalismo/dados/:id" element={<Dados />} />
-          <Route path="/ocorrencia" element={<Ocorrencia />} />
-          <Route path="/graficos" element={<Graficos />} />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/suspeitos" element={<Suspeitos />} />
+            <Route path="/tecnico" element={<Tecnico />} />
+            <Route path="/vandalismo" element={<Vandalismo />} />
+            <Route path="/config" element={<Configuracoes />} />
+            <Route path="/suspeitos/novo" element={<NovaOcorrencia />} />
+            <Route path="/vandalismo/novo" element={<NovoVandalismo />} />
+            <Route path="/suspeitos/ficha" element={<Ficha />} />
+            <Route path="/vandalismo/dados/:id" element={<Dados />} />
+            <Route path="/ocorrencia" element={<Ocorrencia />} />
+            <Route path="/graficos" element={<Graficos />} />
+          </Route>
         </Route>
 
-        <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route path="/" element={<Navigate to="/dashboard" replace/>} />
+
+        <Route path="*" element={<Navigate to="/login" replace />} />
+        
       </Routes>
     </BrowserRouter>
   );

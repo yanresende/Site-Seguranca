@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Shield, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
@@ -9,6 +9,14 @@ export default function Login() {
   const [senha, setSenha] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Redireciona se o usuário já estiver logado
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [navigate]);
 
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
 

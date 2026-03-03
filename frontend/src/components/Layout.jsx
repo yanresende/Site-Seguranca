@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   MapPinned,
@@ -11,6 +11,16 @@ import {
 } from "lucide-react";
 
 export default function Layout() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Limpa os dados de autenticação do localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    // Redireciona para a página de login, substituindo a entrada no histórico
+    navigate('/login', { replace: true });
+  };
+
   return (
     <div className="flex h-screen bg-gray-50">
       {/* SIDEBAR */}
@@ -63,7 +73,10 @@ export default function Layout() {
         </nav>
 
         <div className="p-4 border-t border-gray-100">
-          <button className="flex items-center gap-3 text-red-500 hover:bg-red-50 w-full p-2 rounded-lg transition">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 text-red-500 hover:bg-red-50 w-full p-2 rounded-lg transition"
+          >
             <LogOut size={20} />
             <span className="font-medium">Sair</span>
           </button>

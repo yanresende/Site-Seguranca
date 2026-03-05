@@ -651,8 +651,8 @@ export default function Dados() {
                           <Clock size={10} /> {v.hora}
                         </span>
                       </div>
-                      <div className="flex-1 border-l-2 border-gray-100 pl-4">
-                        <p className="text-sm text-gray-600 leading-relaxed">
+                      <div className="flex-1 border-l-2 border-gray-100 pl-4 min-w-0">
+                        <p className="text-sm text-gray-600 leading-relaxed break-words">
                           {v.registro}
                         </p>
                       </div>

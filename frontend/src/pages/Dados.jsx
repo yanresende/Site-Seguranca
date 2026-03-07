@@ -25,6 +25,11 @@ export default function Dados() {
   const [formData, setFormData] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
+  // Estado para gerenciar a edição das visitas
+  const [editingVisitaId, setEditingVisitaId] = useState(null);
+  const [editedVisita, setEditedVisita] = useState({ data: "", hora: "", registro: "" });
+
+
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
   const statusColors = {
@@ -78,6 +83,57 @@ export default function Dados() {
         setLoading(false);
       });
   }, [id]);
+
+  // --- Handlers para Edição de Visitas ---
+
+  const handleStartEditVisita = (visita) => {
+    setEditingVisitaId(visita.id);
+    // Garante que a hora esteja no formato HH:mm para o input
+    const horaFormatada = visita.hora && visita.hora.length > 5 ? visita.hora.substring(0, 5) : visita.hora;
+    setEditedVisita({ ...visita, hora: horaFormatada });
+  };
+
+  const handleCancelEditVisita = () => {
+    setEditingVisitaId(null);
+    setEditedVisita({ data: "", hora: "", registro: "" });
+  };
+
+  const handleSaveEditVisita = (visitaId) => {
+    const ocorrenciaId = id || 1;
+
+    // Payload para o backend, garantindo que a hora tenha segundos
+    const payload = {
+      dataVisita: editedVisita.data,
+      horaVisita: editedVisita.hora ? `${editedVisita.hora}:00` : null,
+      registroVisita: editedVisita.registro,
+    };
+
+    fetch(`${apiUrl}/api/ocorrencias/${ocorrenciaId}/visitas/${visitaId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Falha ao atualizar visita");
+        return res.json();
+    })
+    .then(updatedVisita => {
+        // Atualiza o estado com os dados retornados
+        setVisitas(visitas.map(v => v.id === visitaId ? {
+            id: updatedVisita.id,
+            data: updatedVisita.dataVisita,
+            hora: updatedVisita.horaVisita,
+            registro: updatedVisita.registroVisita,
+        } : v));
+        // Sai do modo de edição
+        handleCancelEditVisita();
+    })
+    .catch(err => {
+        alert("Erro ao salvar visita: " + err.message);
+    });
+  };
+
+  // --- Fim dos Handlers de Edição ---
 
   const adicionarVisita = (e) => {
     e.preventDefault();
@@ -664,33 +720,66 @@ export default function Dados() {
                     Nenhuma visita registrada.
                   </div>
                 ) : (
-                  visitas.map((v) => (
-                    <div
-                      key={v.id}
-                      className={`${styles.visitaItem} group`}
-                    >
-                      <div className="flex flex-col items-center min-w-[80px]">
-                        <div className="bg-green-50 text-green-700 text-xs font-bold px-2 py-1 rounded-md mb-1">
-                          {v.data.split("-").reverse().join("/")}
+                  visitas.map((v) =>
+                    editingVisitaId === v.id ? (
+                      // MODO DE EDIÇÃO
+                      <div key={v.id} className={styles.visitaEditContainer}>
+                        <div className={styles.visitaEditInputs}>
+                          <input
+                            type="date"
+                            value={editedVisita.data}
+                            onChange={(e) => setEditedVisita({ ...editedVisita, data: e.target.value })}
+                            className={styles.visitaInput}
+                          />
+                          <input
+                            type="time"
+                            value={editedVisita.hora}
+                            onChange={(e) => setEditedVisita({ ...editedVisita, hora: e.target.value })}
+                            className={styles.visitaInput}
+                          />
                         </div>
-                        <span className="text-xs text-gray-400 flex items-center gap-1">
-                          <Clock size={10} /> {v.hora}
-                        </span>
+                        <textarea
+                          value={editedVisita.registro}
+                          onChange={(e) => setEditedVisita({ ...editedVisita, registro: e.target.value })}
+                          className={`${styles.visitaInput} ${styles.visitaTextarea}`}
+                          rows="3"
+                        />
+                        <div className={styles.visitaEditActions}>
+                          <button onClick={handleCancelEditVisita} className={styles.visitaCancelButton}>
+                            Cancelar
+                          </button>
+                          <button onClick={() => handleSaveEditVisita(v.id)} className={styles.visitaSaveButton} title="Salvar alterações da visita">
+                            <Save size={16} /> Salvar
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex-1 border-l-2 border-gray-100 pl-4 min-w-0">
-                        <p className="text-sm text-gray-600 leading-relaxed break-words">
-                          {v.registro}
-                        </p>
+                    ) : (
+                      // MODO DE VISUALIZAÇÃO
+                      <div key={v.id} className={`${styles.visitaItem} group`}>
+                        <div className="flex flex-col items-center min-w-[80px]">
+                          <div className="bg-green-50 text-green-700 text-xs font-bold px-2 py-1 rounded-md mb-1">
+                            {v.data.split("-").reverse().join("/")}
+                          </div>
+                          <span className="text-xs text-gray-400 flex items-center gap-1">
+                            <Clock size={10} /> {v.hora}
+                          </span>
+                        </div>
+                        <div className="flex-1 border-l-2 border-gray-100 pl-4 min-w-0">
+                          <p className="text-sm text-gray-600 leading-relaxed break-words">
+                            {v.registro}
+                          </p>
+                        </div>
+                        <div className={styles.visitaActions}>
+                          <button onClick={() => handleStartEditVisita(v)} className={styles.visitaActionButton} title="Editar visita">
+                            <Edit size={16} />
+                          </button>
+                          <button onClick={() => handleDeleteVisita(v.id)} className={`${styles.visitaActionButton} ${styles.visitaDeleteAction}`} title="Remover visita">
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </div>
-                      <button
-                        onClick={() => handleDeleteVisita(v.id)}
-                        className={styles.visitaDeleteButton}
-                        title="Remover visita"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  ))
+                    )
+                  )
                 )}
               </div>
             </div>

@@ -2,6 +2,7 @@ package com.seguranca.api.controller;
 
 import com.seguranca.api.model.Ocorrencia;
 import com.seguranca.api.model.Visita;
+import com.seguranca.api.repository.VisitaRepository;
 import com.seguranca.api.repository.OcorrenciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,9 @@ public class OcorrenciaController {
 
     @Autowired
     private OcorrenciaRepository ocorrenciaRepository;
+
+    @Autowired
+    private VisitaRepository visitaRepository;
 
     // Endpoint para LISTAR ocorrências com paginação, filtro e ordenação
     @GetMapping
@@ -78,9 +82,29 @@ public class OcorrenciaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint para ATUALIZAR uma visita existente
+    @PutMapping("/{ocorrenciaId}/visitas/{visitaId}")
+    public ResponseEntity<?> updateVisita(@PathVariable Long ocorrenciaId, @PathVariable Long visitaId, @RequestBody Visita visitaDetails) {
+        return visitaRepository.findById(visitaId)
+                .map(visita -> {
+                    // Checa se a visita pertence à ocorrência correta para segurança
+                    if (!visita.getOcorrencia().getId().equals(ocorrenciaId)) {
+                        // Retorna 'Forbidden' se o ID da ocorrência na URL não bate com o da visita
+                        return ResponseEntity.status(403).build();
+                    }
+                    visita.setDataVisita(visitaDetails.getDataVisita());
+                    visita.setHoraVisita(visitaDetails.getHoraVisita());
+                    visita.setRegistroVisita(visitaDetails.getRegistroVisita());
+
+                    Visita updatedVisita = visitaRepository.save(visita);
+                    return ResponseEntity.ok(updatedVisita);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     // Endpoint para ADICIONAR uma VISITA a uma ocorrência
     @PostMapping("/{id}/visitas")
-    public ResponseEntity<Visita> addVisita(@PathVariable Long id, @RequestBody Visita visita) {
+    public ResponseEntity<?> addVisita(@PathVariable Long id, @RequestBody Visita visita) {
         return ocorrenciaRepository.findById(id)
                 .map(ocorrencia -> {
                     visita.setOcorrencia(ocorrencia);

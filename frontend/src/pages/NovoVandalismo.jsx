@@ -182,16 +182,23 @@ export default function NovaOcorrencia() {
           </div>
           <div className={styles.grid2}>
             <Input
-              label="Filmagem disponível?"
-              options={["Sim", "Não"]}
-              value={formData.filmagem}
-              onChange={(e) =>
-                setFormData({ ...formData, filmagem: e.target.value })
-              }
-            />
-            <Input
               label="Causa Real"
-              placeholder="Ex: Escreva a causa real do vandalismo"
+              options={[
+                "ABALROAMENTO",
+                "DESCARGA ELÉTRICA",
+                "ERRO OPERACIONAL INTERNO",
+                "INCÊNDIO",
+                "INCONCLUSIVO",
+                "NÃO APURADO POR FALTA DE INFORMAÇÕES",
+                "OBRAS DE TERCEIROS",
+                "QUEDA OU PODA DE ÁRVORE",
+                "SABOTAGEM - AÇÃO INTENCIONAL",
+                "SEM MOVIMENTAÇÃO NAS IMAGENS",
+                "TROCA DE POSTE",
+                "VANDALISMO",
+                "VANDALISMO DEVIDO FURTO DE CABO METÁLICO",
+                "OUTROS",
+              ]}
               value={formData.causa_real}
               onChange={(e) =>
                 setFormData({ ...formData, causa_real: e.target.value })

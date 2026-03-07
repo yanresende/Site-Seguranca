@@ -422,12 +422,37 @@ export default function Dados() {
                           <option value="Concluido">Concluido</option>
                         </select>
                       </div>
-                      <EditableItem
-                        label="Causa Real"
-                        name="causaReal"
-                        value={formData.causaReal}
-                        onChange={handleChange}
-                      />
+                      <div>
+                        <span className={styles.label}>Causa Real</span>
+                        <select
+                          name="causaReal"
+                          value={formData.causaReal || ""}
+                          onChange={handleChange}
+                          className={styles.input}
+                        >
+                          <option value="">Selecione...</option>
+                          {[
+                            "ABALROAMENTO",
+                            "DESCARGA ELÉTRICA",
+                            "ERRO OPERACIONAL INTERNO",
+                            "INCÊNDIO",
+                            "INCONCLUSIVO",
+                            "NÃO APURADO POR FALTA DE INFORMAÇÕES",
+                            "OBRAS DE TERCEIROS",
+                            "QUEDA OU PODA DE ÁRVORE",
+                            "SABOTAGEM - AÇÃO INTENCIONAL",
+                            "SEM MOVIMENTAÇÃO NAS IMAGENS",
+                            "TROCA DE POSTE",
+                            "VANDALISMO",
+                            "VANDALISMO DEVIDO FURTO DE CABO METÁLICO",
+                            "OUTROS",
+                          ].map((opt) => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                       <div>
                         <span className={styles.label}>
                           Fonte

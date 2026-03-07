@@ -432,20 +432,21 @@ export default function Dados() {
                         >
                           <option value="">Selecione...</option>
                           {[
-                            "ABALROAMENTO",
-                            "DESCARGA ELÉTRICA",
-                            "ERRO OPERACIONAL INTERNO",
-                            "INCÊNDIO",
-                            "INCONCLUSIVO",
-                            "NÃO APURADO POR FALTA DE INFORMAÇÕES",
-                            "OBRAS DE TERCEIROS",
-                            "QUEDA OU PODA DE ÁRVORE",
-                            "SABOTAGEM - AÇÃO INTENCIONAL",
-                            "SEM MOVIMENTAÇÃO NAS IMAGENS",
-                            "TROCA DE POSTE",
-                            "VANDALISMO",
-                            "VANDALISMO DEVIDO FURTO DE CABO METÁLICO",
-                            "OUTROS",
+                            "Abalroamento",
+                            "Descarga elétrica",
+                            "Erro operacional interno",
+                            "Incêndio",
+                            "Inconclusivo",
+                            "Não apurado por falta de informações",
+                            "Obras de terceiros",
+                            "Queda ou poda de árvore",
+                            "Sabotagem - ação intencional",
+                            "Sem movimentação nas imagens",
+                            "Troca de poste",
+                            "Vandalismo",
+                            "Vandalismo devido furto de cabo metálico",
+                            "Outros",
+                            
                           ].map((opt) => (
                             <option key={opt} value={opt}>
                               {opt}

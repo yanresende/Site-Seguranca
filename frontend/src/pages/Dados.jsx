@@ -10,6 +10,7 @@ import {
   ExternalLink,
   Info,
   Plus,
+  Camera,
 } from "lucide-react";
 import { Save } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -24,6 +25,8 @@ export default function Dados() {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [fotoTimestamp, setFotoTimestamp] = useState(Date.now()); // Para forçar recarregamento da imagem
+  const [imageError, setImageError] = useState(false);
 
   // Estado para gerenciar a edição das visitas
   const [editingVisitaId, setEditingVisitaId] = useState(null);
@@ -134,6 +137,31 @@ export default function Dados() {
   };
 
   // --- Fim dos Handlers de Edição ---
+
+  const handleFotoUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formDataUpload = new FormData();
+    formDataUpload.append("file", file);
+
+    const ocorrenciaId = id || 1;
+
+    fetch(`${apiUrl}/api/ocorrencias/${ocorrenciaId}/foto`, {
+      method: "POST",
+      body: formDataUpload,
+    })
+      .then((res) => {
+        if (res.ok) {
+          setFotoTimestamp(Date.now()); // Atualiza timestamp para recarregar a imagem
+          setImageError(false);
+          alert("Foto enviada com sucesso!");
+        } else {
+          alert("Erro ao enviar foto.");
+        }
+      })
+      .catch((err) => console.error(err));
+  };
 
   const adicionarVisita = (e) => {
     e.preventDefault();
@@ -330,9 +358,22 @@ export default function Dados() {
             <MapPin size={32} />
           </div>
           <div>
-            <h1 className={styles.title}>
-              {dados.rua}, {dados.numero}
-            </h1>
+            <div className="flex items-center gap-2">
+              <h1 className={styles.title}>
+                {dados.rua}, {dados.numero}
+              </h1>
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                  `${dados.rua}, ${dados.numero}, ${dados.bairro}, ${dados.cidade} - ${dados.uf}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:text-blue-700 p-1 rounded-full hover:bg-blue-50 transition"
+                title="Abrir no Google Maps"
+              >
+                <ExternalLink size={20} />
+              </a>
+            </div>
             <p className={styles.subtitle}>
               {dados.bairro}, {dados.cidade} - {dados.uf}
             </p>
@@ -793,6 +834,39 @@ export default function Dados() {
               <Video size={18} className="text-purple-600" /> Mídia e Evidências
             </h3>
             <div className="space-y-4">
+              {/* ÁREA DA FOTO DO LOCAL */}
+              <div>
+                <span className={`${styles.label} mb-2 block`}>Foto do Local</span>
+                <div className="relative w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border border-gray-200 group">
+                  {!imageError ? (
+                    <img
+                      src={`${apiUrl}/api/ocorrencias/${id || 1}/foto?t=${fotoTimestamp}`}
+                      alt="Evidência do Local"
+                      className="w-full h-full object-cover"
+                      onError={() => setImageError(true)}
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-gray-400">
+                      <Camera size={32} />
+                      <span className="text-xs mt-1">Sem foto registrada</span>
+                    </div>
+                  )}
+
+                  {/* Botão de Upload (Só aparece ao editar) */}
+                  {isEditing && (
+                    <label className="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow cursor-pointer hover:bg-blue-50 transition transform hover:scale-105">
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handleFotoUpload}
+                      />
+                      <Camera size={20} className="text-blue-600" />
+                    </label>
+                  )}
+                </div>
+              </div>
+
               <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
                 <span className="text-sm text-gray-600">Filmagem?</span>
                 {isEditing ? (

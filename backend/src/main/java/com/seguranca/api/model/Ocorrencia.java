@@ -44,6 +44,10 @@ public class Ocorrencia {
     private String status;
     private String fotografico;
 
+    @Lob
+    private byte[] foto;
+    private String fotoContentType;
+
     @OneToMany(mappedBy = "ocorrencia", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Visita> visitas = new ArrayList<>();
@@ -70,6 +74,14 @@ public class Ocorrencia {
 
     public void setFotografico(String fotografico) {
         this.fotografico = fotografico;
+    }
+
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
+    }
+
+    public void setFotoContentType(String fotoContentType) {
+        this.fotoContentType = fotoContentType;
     }
 
     public void setNumero(String numero) {
@@ -206,5 +218,13 @@ public class Ocorrencia {
 
     public String getFotografico() {
         return fotografico;
+    }
+
+    public byte[] getFoto() {
+        return foto;
+    }
+
+    public String getFotoContentType() {
+        return fotoContentType;
     }
 }

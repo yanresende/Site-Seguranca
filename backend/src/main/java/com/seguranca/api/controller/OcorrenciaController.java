@@ -10,7 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -80,6 +82,34 @@ public class OcorrenciaController {
                     return ResponseEntity.ok(updatedOcorrencia);
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    // Endpoint para UPLOAD da FOTO
+    @PostMapping("/{id}/foto")
+    public ResponseEntity<?> uploadFoto(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        return ocorrenciaRepository.findById(id).map(ocorrencia -> {
+            try {
+                ocorrencia.setFoto(file.getBytes());
+                ocorrencia.setFotoContentType(file.getContentType());
+                ocorrenciaRepository.save(ocorrencia);
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                return ResponseEntity.internalServerError().build();
+            }
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    // Endpoint para PEGAR a FOTO
+    @GetMapping("/{id}/foto")
+    public ResponseEntity<byte[]> getFoto(@PathVariable Long id) {
+        return ocorrenciaRepository.findById(id).map(ocorrencia -> {
+            if (ocorrencia.getFoto() == null) {
+                return ResponseEntity.notFound().<byte[]>build();
+            }
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(ocorrencia.getFotoContentType()))
+                    .body(ocorrencia.getFoto());
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     // Endpoint para ATUALIZAR uma visita existente

@@ -1,5 +1,6 @@
 package com.seguranca.api.repository;
 
+import com.seguranca.api.dto.OcorrenciaSummaryDTO;
 import com.seguranca.api.model.Ocorrencia;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,12 +15,16 @@ import java.util.List;
 @Repository
 public interface OcorrenciaRepository extends JpaRepository<Ocorrencia, Long> {
     
-    @Query("SELECT o FROM Ocorrencia o WHERE " +
+    @Query("SELECT new com.seguranca.api.dto.OcorrenciaSummaryDTO(" +
+           "o.id, o.rua, o.bairro, o.cidade, o.uf, o.numero, o.cep, " +
+           "o.dataAcionamento, o.dataVandalismo, o.horaAcionamento, o.horaQueda, " +
+           "o.causaReal, o.observacoes, o.filmagem, o.fonte, o.rota, o.status, o.fotografico) " +
+           "FROM Ocorrencia o WHERE " +
            "(:status = 'Todos' OR o.status = :status) AND " +
            "(LOWER(o.rua) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(o.bairro) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(o.cidade) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
-    Page<Ocorrencia> findWithFiltersAndPagination(
+    Page<OcorrenciaSummaryDTO> findWithFiltersAndPagination(
         @Param("searchTerm") String searchTerm,
         @Param("status") String status,
         Pageable pageable);

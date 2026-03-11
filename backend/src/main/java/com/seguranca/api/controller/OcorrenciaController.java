@@ -1,16 +1,17 @@
 package com.seguranca.api.controller;
 
+import com.seguranca.api.dto.OcorrenciaSummaryDTO;
 import com.seguranca.api.model.Ocorrencia;
 import com.seguranca.api.model.Visita;
-import com.seguranca.api.repository.VisitaRepository;
 import com.seguranca.api.repository.OcorrenciaRepository;
+import com.seguranca.api.repository.VisitaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,7 +34,7 @@ public class OcorrenciaController {
 
     // Endpoint para LISTAR ocorrências com paginação, filtro e ordenação
     @GetMapping
-    public Page<Ocorrencia> getAllOcorrencias(
+    public Page<OcorrenciaSummaryDTO> getAllOcorrencias(
             @RequestParam(required = false, defaultValue = "") String searchTerm,
             @RequestParam(required = false, defaultValue = "Todos") String status,
             @PageableDefault(size = 10, sort = "dataAcionamento", direction = Sort.Direction.DESC) Pageable pageable) {

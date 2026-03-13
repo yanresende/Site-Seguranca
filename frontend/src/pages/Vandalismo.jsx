@@ -199,7 +199,8 @@ function VandalismoRow({ ocorrencia }) {
             />
           </div>
           <div>
-            <div className="font-bold text-gray-700">{`${ocorrencia.rua}, ${ocorrencia.numero} - ${ocorrencia.bairro}`}</div>
+            <div className="font-bold text-gray-700">{`${ocorrencia.rua}, ${ocorrencia.numero}`}</div>
+            <div className="text-sm text-gray-500">{`${ocorrencia.bairro}, ${ocorrencia.cidade}`}</div>
             <div className={`text-xs font-medium px-2 py-1 rounded transition ${statusColors[status] || "text-gray-600 bg-gray-50"}`}>
               {status}
             </div>

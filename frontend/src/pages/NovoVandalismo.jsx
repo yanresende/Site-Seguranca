@@ -78,7 +78,9 @@ export default function NovaOcorrencia() {
       numero: formData.numero,
       cep: formData.cep,
       dataAcionamento: formData.data_acionamento || null,
-      horaAcionamento: formData.hora_acionamento ? formData.hora_acionamento + ":00" : null,
+      horaAcionamento: formData.hora_acionamento
+        ? formData.hora_acionamento + ":00"
+        : null,
       dataVandalismo: formData.data_vandalismo || null,
       horaQueda: formData.hora_queda ? formData.hora_queda + ":00" : null,
       referencia: formData.referencia,
@@ -87,7 +89,7 @@ export default function NovaOcorrencia() {
       fonte: formData.fonte,
       rota: formData.rota,
       fotografico: formData.fotografico,
-      status: "Pendente" // Define um status inicial padrão
+      status: "Pendente", // Define um status inicial padrão
     };
 
     fetch(`${apiUrl}/api/ocorrencias`, {
@@ -107,8 +109,9 @@ export default function NovaOcorrencia() {
           return fetch(`${apiUrl}/api/ocorrencias/${newOcorrencia.id}/foto`, {
             method: "POST",
             body: formDataUpload,
-          }).then(res => {
-            if (!res.ok) throw new Error("Ocorrência criada, mas erro ao enviar foto.");
+          }).then((res) => {
+            if (!res.ok)
+              throw new Error("Ocorrência criada, mas erro ao enviar foto.");
             return newOcorrencia;
           });
         }
@@ -288,17 +291,17 @@ export default function NovaOcorrencia() {
               }
             />
             <Input
+              label="Foto do Local"
+              type="file"
+              onChange={(e) => setFoto(e.target.files[0])}
+            />
+            <Input
               label="Referência"
               placeholder="Ex: Ao lado do supermercado X"
               value={formData.referencia}
               onChange={(e) =>
                 setFormData({ ...formData, referencia: e.target.value })
               }
-            />
-            <Input
-              label="Foto do Local"
-              type="file"
-              onChange={(e) => setFoto(e.target.files[0])}
             />
           </div>
         </div>
@@ -307,21 +310,27 @@ export default function NovaOcorrencia() {
   );
 }
 
-function Input({ label, type = "text", placeholder, value, onChange, options, required }) {
+function Input({
+  label,
+  type = "text",
+  placeholder,
+  value,
+  onChange,
+  options,
+  required,
+}) {
   return (
     <div className={styles.inputContainer}>
       <label className={styles.label}>
         {label} {required && <span className={styles.required}>*</span>}
       </label>
       {options ? (
-        <select
-          value={value}
-          onChange={onChange}
-          className={styles.inputField}
-        >
+        <select value={value} onChange={onChange} className={styles.inputField}>
           <option value="">Selecione...</option>
           {options.map((opt) => (
-            <option key={opt} value={opt}>{opt}</option>
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
           ))}
         </select>
       ) : (

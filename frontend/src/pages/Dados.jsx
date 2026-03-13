@@ -27,6 +27,8 @@ export default function Dados() {
   const [isSaving, setIsSaving] = useState(false);
   const [fotoTimestamp, setFotoTimestamp] = useState(Date.now()); // Para forçar recarregamento da imagem
   const [imageError, setImageError] = useState(false);
+  const [foto2Timestamp, setFoto2Timestamp] = useState(Date.now());
+  const [image2Error, setImage2Error] = useState(false);
 
   // Estado para gerenciar a edição das visitas
   const [editingVisitaId, setEditingVisitaId] = useState(null);
@@ -158,6 +160,31 @@ export default function Dados() {
           alert("Foto enviada com sucesso!");
         } else {
           alert("Erro ao enviar foto.");
+        }
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const handleFoto2Upload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formDataUpload = new FormData();
+    formDataUpload.append("file", file);
+
+    const ocorrenciaId = id || 1;
+
+    fetch(`${apiUrl}/api/ocorrencias/${ocorrenciaId}/foto2`, {
+      method: "POST",
+      body: formDataUpload,
+    })
+      .then((res) => {
+        if (res.ok) {
+          setFoto2Timestamp(Date.now()); // Atualiza timestamp para recarregar a imagem
+          setImage2Error(false);
+          alert("Foto 2 enviada com sucesso!");
+        } else {
+          alert("Erro ao enviar foto 2.");
         }
       })
       .catch((err) => console.error(err));
@@ -852,11 +879,11 @@ export default function Dados() {
             <h3 className={styles.cardTitle}>
               <Video size={18} className="text-purple-600" /> Mídia e Evidências
             </h3>
-            <div className="space-y-4">
-              {/* ÁREA DA FOTO DO LOCAL */}
+            <div className="grid grid-cols-1 gap-4">
+              {/* ÁREA DA FOTO DO LOCAL 1 */}
               <div>
                 <span className={`${styles.label} mb-2 block`}>
-                  Foto do Local
+                  Foto 1 do Local
                 </span>
                 <div className="relative w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border border-gray-200 group">
                   {!imageError ? (
@@ -869,11 +896,10 @@ export default function Dados() {
                   ) : (
                     <div className="flex flex-col items-center justify-center text-gray-400">
                       <Camera size={32} />
-                      <span className="text-xs mt-1">Sem foto registrada</span>
+                      <span className="text-xs mt-1">Sem foto</span>
                     </div>
                   )}
 
-                  {/* Botão de Upload (Só aparece ao editar) */}
                   {isEditing && (
                     <label className="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow cursor-pointer hover:bg-blue-50 transition transform hover:scale-105">
                       <input
@@ -888,6 +914,42 @@ export default function Dados() {
                 </div>
               </div>
 
+              {/* ÁREA DA FOTO DO LOCAL 2 */}
+              <div>
+                <span className={`${styles.label} mb-2 block`}>
+                  Foto 2 do Local
+                </span>
+                <div className="relative w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border border-gray-200 group">
+                  {!image2Error ? (
+                    <img
+                      src={`${apiUrl}/api/ocorrencias/${id || 1}/foto2?t=${foto2Timestamp}`}
+                      alt="Evidência do Local 2"
+                      className="w-full h-full object-contain"
+                      onError={() => setImage2Error(true)}
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-gray-400">
+                      <Camera size={32} />
+                      <span className="text-xs mt-1">Sem foto</span>
+                    </div>
+                  )}
+
+                  {isEditing && (
+                    <label className="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow cursor-pointer hover:bg-blue-50 transition transform hover:scale-105">
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handleFoto2Upload}
+                      />
+                      <Camera size={20} className="text-blue-600" />
+                    </label>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4 mt-4">
               <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
                 <span className="text-sm text-gray-600">Filmagem?</span>
                 {isEditing ? (

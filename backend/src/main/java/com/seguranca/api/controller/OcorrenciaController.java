@@ -114,6 +114,34 @@ public class OcorrenciaController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+    // Endpoint para UPLOAD da FOTO 2
+    @PostMapping("/{id}/foto2")
+    public ResponseEntity<?> uploadFoto2(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        return ocorrenciaRepository.findById(id).map(ocorrencia -> {
+            try {
+                ocorrencia.setFoto2(file.getBytes());
+                ocorrencia.setFoto2ContentType(file.getContentType());
+                ocorrenciaRepository.save(ocorrencia);
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                return ResponseEntity.internalServerError().build();
+            }
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    // Endpoint para PEGAR a FOTO 2
+    @GetMapping("/{id}/foto2")
+    public ResponseEntity<byte[]> getFoto2(@PathVariable Long id) {
+        return ocorrenciaRepository.findById(id).map(ocorrencia -> {
+            if (ocorrencia.getFoto2() == null) {
+                return ResponseEntity.notFound().<byte[]>build();
+            }
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(ocorrencia.getFoto2ContentType()))
+                    .body(ocorrencia.getFoto2());
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
     // Endpoint para ATUALIZAR uma visita existente
     @PutMapping("/{ocorrenciaId}/visitas/{visitaId}")
     public ResponseEntity<?> updateVisita(@PathVariable Long ocorrenciaId, @PathVariable Long visitaId, @RequestBody Visita visitaDetails) {

@@ -13,7 +13,8 @@ export default function NovaOcorrencia() {
     rota: "",
     data_visita: "",
     hora_visita: "",
-    filmagem: "",
+    filmagem: "Não",
+    referencia: "",
     causa_real: "",
     observacoes: "",
     fotografico: "",
@@ -218,11 +219,6 @@ export default function NovaOcorrencia() {
                 setFormData({ ...formData, fotografico: e.target.value })
               }
             />
-             <Input
-              label="Foto do Local"
-              type="file"
-              onChange={(e) => setFoto(e.target.files[0])}
-            />
             <Input
               label="Observações"
               placeholder="Ex: detalhes adicionais"
@@ -298,6 +294,11 @@ export default function NovaOcorrencia() {
               onChange={(e) =>
                 setFormData({ ...formData, referencia: e.target.value })
               }
+            />
+            <Input
+              label="Foto do Local"
+              type="file"
+              onChange={(e) => setFoto(e.target.files[0])}
             />
           </div>
         </div>

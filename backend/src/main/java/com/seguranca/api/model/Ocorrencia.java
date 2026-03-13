@@ -49,6 +49,10 @@ public class Ocorrencia {
     private byte[] foto;
     private String fotoContentType;
 
+    @Lob
+    private byte[] foto2;
+    private String foto2ContentType;
+
     @OneToMany(mappedBy = "ocorrencia", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Visita> visitas = new ArrayList<>();
@@ -65,6 +69,14 @@ public class Ocorrencia {
 
     // ===== SETTERS =====
 
+    public void setFoto2(byte[] foto2) {
+        this.foto2 = foto2;
+    }
+
+    public void setFoto2ContentType(String foto2ContentType) {
+        this.foto2ContentType = foto2ContentType;
+    }
+
     public void setRota(String rota) {
         this.rota = rota;
     }
@@ -72,6 +84,7 @@ public class Ocorrencia {
     public void setRua(String rua) {
         this.rua = rua;
     }
+
 
     public void setFotografico(String fotografico) {
         this.fotografico = fotografico;
@@ -235,5 +248,13 @@ public class Ocorrencia {
 
     public String getFotoContentType() {
         return fotoContentType;
+    }
+
+    public byte[] getFoto2() {
+        return foto2;
+    }
+
+    public String getFoto2ContentType() {
+        return foto2ContentType;
     }
 }

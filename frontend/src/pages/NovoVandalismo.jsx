@@ -27,6 +27,7 @@ export default function NovaOcorrencia() {
     numero: "",
   });
   const [foto, setFoto] = useState(null);
+  const [foto2, setFoto2] = useState(null);
 
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
@@ -102,20 +103,36 @@ export default function NovaOcorrencia() {
         return res.json();
       })
       .then((newOcorrencia) => {
-        if (foto) {
-          const formDataUpload = new FormData();
-          formDataUpload.append("file", foto);
+        // Inicia uma cadeia de promessas para carregar as fotos em sequência
+        let promiseChain = Promise.resolve();
 
-          return fetch(`${apiUrl}/api/ocorrencias/${newOcorrencia.id}/foto`, {
-            method: "POST",
-            body: formDataUpload,
-          }).then((res) => {
-            if (!res.ok)
-              throw new Error("Ocorrência criada, mas erro ao enviar foto.");
-            return newOcorrencia;
+        if (foto) {
+          promiseChain = promiseChain.then(() => {
+            const formDataUpload1 = new FormData();
+            formDataUpload1.append("file", foto);
+            return fetch(`${apiUrl}/api/ocorrencias/${newOcorrencia.id}/foto`, {
+              method: "POST",
+              body: formDataUpload1,
+            }).then((res) => {
+              if (!res.ok) throw new Error("Erro ao enviar a primeira foto.");
+            });
           });
         }
-        return newOcorrencia;
+
+        if (foto2) {
+          promiseChain = promiseChain.then(() => {
+            const formDataUpload2 = new FormData();
+            formDataUpload2.append("file", foto2);
+            return fetch(`${apiUrl}/api/ocorrencias/${newOcorrencia.id}/foto2`, {
+              method: "POST",
+              body: formDataUpload2,
+            }).then((res) => {
+              if (!res.ok) throw new Error("Erro ao enviar a segunda foto.");
+            });
+          });
+        }
+
+        return promiseChain;
       })
       .then(() => {
         alert("Ocorrência registrada com sucesso!");
@@ -294,6 +311,11 @@ export default function NovaOcorrencia() {
               label="Foto do Local"
               type="file"
               onChange={(e) => setFoto(e.target.files[0])}
+            />
+            <Input
+              label="Foto 2 do Local"
+              type="file"
+              onChange={(e) => setFoto2(e.target.files[0])}
             />
             <Input
               label="Referência"

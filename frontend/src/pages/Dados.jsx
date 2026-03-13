@@ -885,12 +885,12 @@ export default function Dados() {
                 <span className={`${styles.label} mb-2 block`}>
                   Foto 1 do Local
                 </span>
-                <div className="relative w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border border-gray-200 group">
+                <div className="relative w-full bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border border-gray-200 group">
                   {!imageError ? (
                     <img
                       src={`${apiUrl}/api/ocorrencias/${id || 1}/foto?t=${fotoTimestamp}`}
                       alt="Evidência do Local"
-                      className="w-full h-full object-contain"
+                      className="max-w-full h-auto"
                       onError={() => setImageError(true)}
                     />
                   ) : (
@@ -919,12 +919,12 @@ export default function Dados() {
                 <span className={`${styles.label} mb-2 block`}>
                   Foto 2 do Local
                 </span>
-                <div className="relative w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border border-gray-200 group">
+                <div className="relative w-full bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border border-gray-200 group">
                   {!image2Error ? (
                     <img
                       src={`${apiUrl}/api/ocorrencias/${id || 1}/foto2?t=${foto2Timestamp}`}
                       alt="Evidência do Local 2"
-                      className="w-full h-full object-contain"
+                      className="max-w-full h-auto"
                       onError={() => setImage2Error(true)}
                     />
                   ) : (

@@ -20,7 +20,7 @@ public class Visita {
     @Column(name = "hora_visita")
     private LocalTime horaVisita;
 
-    @Column(name = "registro_visita")
+    @Column(name = "registro_visita", columnDefinition = "TEXT")
     private String registroVisita;
 
     @ManyToOne

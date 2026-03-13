@@ -25,6 +25,7 @@ export default function NovaOcorrencia() {
     uf: "",
     numero: "",
   });
+  const [foto, setFoto] = useState(null);
 
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
@@ -79,7 +80,7 @@ export default function NovaOcorrencia() {
       horaAcionamento: formData.hora_acionamento ? formData.hora_acionamento + ":00" : null,
       dataVandalismo: formData.data_vandalismo || null,
       horaQueda: formData.hora_queda ? formData.hora_queda + ":00" : null,
-      causaReal: formData.causa_real,
+      referencia: formData.referencia,
       observacoes: formData.observacoes,
       filmagem: formData.filmagem,
       fonte: formData.fonte,
@@ -94,16 +95,31 @@ export default function NovaOcorrencia() {
       body: JSON.stringify(payload),
     })
       .then((res) => {
-        if (res.ok) {
-          alert("Ocorrência registrada com sucesso!");
-          navigate("/vandalismo");
-        } else {
-          alert("Erro ao registrar ocorrência. Verifique os dados.");
+        if (!res.ok) throw new Error("Erro ao registrar ocorrência.");
+        return res.json();
+      })
+      .then((newOcorrencia) => {
+        if (foto) {
+          const formDataUpload = new FormData();
+          formDataUpload.append("file", foto);
+
+          return fetch(`${apiUrl}/api/ocorrencias/${newOcorrencia.id}/foto`, {
+            method: "POST",
+            body: formDataUpload,
+          }).then(res => {
+            if (!res.ok) throw new Error("Ocorrência criada, mas erro ao enviar foto.");
+            return newOcorrencia;
+          });
         }
+        return newOcorrencia;
+      })
+      .then(() => {
+        alert("Ocorrência registrada com sucesso!");
+        navigate("/vandalismo");
       })
       .catch((error) => {
         console.error("Erro:", error);
-        alert("Erro de conexão com o servidor.");
+        alert(error.message || "Erro de conexão com o servidor.");
       });
   };
 
@@ -117,10 +133,7 @@ export default function NovaOcorrencia() {
         >
           <ArrowLeft size={20} /> Voltar
         </button>
-        <button
-          onClick={handleSubmit}
-          className={styles.saveButton}
-        >
+        <button onClick={handleSubmit} className={styles.saveButton}>
           <Save size={20} /> Salvar Registro
         </button>
       </div>
@@ -182,29 +195,6 @@ export default function NovaOcorrencia() {
           </div>
           <div className={styles.grid2}>
             <Input
-              label="Causa Real"
-              options={[
-                "ABALROAMENTO",
-                "DESCARGA ELÉTRICA",
-                "ERRO OPERACIONAL INTERNO",
-                "INCÊNDIO",
-                "INCONCLUSIVO",
-                "NÃO APURADO POR FALTA DE INFORMAÇÕES",
-                "OBRAS DE TERCEIROS",
-                "QUEDA OU PODA DE ÁRVORE",
-                "SABOTAGEM - AÇÃO INTENCIONAL",
-                "SEM MOVIMENTAÇÃO NAS IMAGENS",
-                "TROCA DE POSTE",
-                "VANDALISMO",
-                "VANDALISMO DEVIDO FURTO DE CABO METÁLICO",
-                "OUTROS",
-              ]}
-              value={formData.causa_real}
-              onChange={(e) =>
-                setFormData({ ...formData, causa_real: e.target.value })
-              }
-            />
-            <Input
               label="Fonte"
               options={["Grupo Crise", "Relatório Analítico"]}
               value={formData.fonte}
@@ -228,6 +218,11 @@ export default function NovaOcorrencia() {
                 setFormData({ ...formData, fotografico: e.target.value })
               }
             />
+             <Input
+              label="Foto do Local"
+              type="file"
+              onChange={(e) => setFoto(e.target.files[0])}
+            />
             <Input
               label="Observações"
               placeholder="Ex: detalhes adicionais"
@@ -246,9 +241,7 @@ export default function NovaOcorrencia() {
           </div>
           <div className={styles.grid3}>
             <div className={styles.inputContainer}>
-              <label className={styles.label}>
-                CEP (Busca automática)
-              </label>
+              <label className={styles.label}>CEP (Busca automática)</label>
               <input
                 className={styles.inputField}
                 placeholder="00000-000"
@@ -296,6 +289,14 @@ export default function NovaOcorrencia() {
               value={formData.numero}
               onChange={(e) =>
                 setFormData({ ...formData, numero: e.target.value })
+              }
+            />
+            <Input
+              label="Referência"
+              placeholder="Ex: Ao lado do supermercado X"
+              value={formData.referencia}
+              onChange={(e) =>
+                setFormData({ ...formData, referencia: e.target.value })
               }
             />
           </div>

@@ -364,7 +364,7 @@ export default function Dados() {
               </h1>
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                  `${dados.rua}, ${dados.numero}, ${dados.bairro}, ${dados.cidade} - ${dados.uf}`
+                  `${dados.rua}, ${dados.numero}, ${dados.bairro}, ${dados.cidade} - ${dados.uf}`,
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -505,9 +505,7 @@ export default function Dados() {
                   {isEditing ? (
                     <>
                       <div>
-                        <span className={styles.label}>
-                          Status
-                        </span>
+                        <span className={styles.label}>Status</span>
                         <select
                           name="status"
                           value={formData.status || "Pendente"}
@@ -543,7 +541,6 @@ export default function Dados() {
                             "Vandalismo",
                             "Vandalismo devido furto de cabo metálico",
                             "Outros",
-                            
                           ].map((opt) => (
                             <option key={opt} value={opt}>
                               {opt}
@@ -552,9 +549,7 @@ export default function Dados() {
                         </select>
                       </div>
                       <div>
-                        <span className={styles.label}>
-                          Fonte
-                        </span>
+                        <span className={styles.label}>Fonte</span>
                         <select
                           name="fonte"
                           value={formData.fonte || ""}
@@ -569,9 +564,7 @@ export default function Dados() {
                         </select>
                       </div>
                       <div>
-                        <span className={styles.label}>
-                          Rota
-                        </span>
+                        <span className={styles.label}>Rota</span>
                         <select
                           name="rota"
                           value={formData.rota || ""}
@@ -596,9 +589,7 @@ export default function Dados() {
                   ) : (
                     <>
                       <div>
-                        <span className={styles.label}>
-                          Status
-                        </span>
+                        <span className={styles.label}>Status</span>
                         <div className="mt-1">
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-bold ${statusColors[dados.status] || styles.statusDefault}`}
@@ -611,12 +602,8 @@ export default function Dados() {
                       <DetailItem label="Fonte" value={dados.fonte} />
                       <DetailItem label="Rota" value={dados.rota} />
                       <div className="md:col-span-2">
-                        <span className={styles.label}>
-                          Observações
-                        </span>
-                        <p className={styles.obsBox}>
-                          {dados.observacoes}
-                        </p>
+                        <span className={styles.label}>Observações</span>
+                        <p className={styles.obsBox}>{dados.observacoes}</p>
                       </div>
                     </>
                   )}
@@ -653,6 +640,12 @@ export default function Dados() {
                       onChange={handleChange}
                     />
                     <EditableItem
+                      label="Referência"
+                      name="referencia"
+                      value={formData.referencia}
+                      onChange={handleChange}
+                    />
+                    <EditableItem
                       label="Bairro"
                       name="bairro"
                       value={formData.bairro}
@@ -675,7 +668,7 @@ export default function Dados() {
                   <>
                     <DetailItem label="CEP" value={dados.cep} />
                     <DetailItem label="Rua" value={dados.rua} />
-                    <DetailItem label="Número" value={dados.numero} />
+                    <DetailItem label="Referência" value={dados.referencia} />
                     <DetailItem label="Bairro" value={dados.bairro} />
                     <DetailItem label="Cidade" value={dados.cidade} />
                     <DetailItem label="Estado" value={dados.uf} />
@@ -685,17 +678,16 @@ export default function Dados() {
             </div>
           )}
           {activeTab === "visita" && (
-            <div className={`${styles.card} space-y-6 animate-in fade-in duration-300`}>
+            <div
+              className={`${styles.card} space-y-6 animate-in fade-in duration-300`}
+            >
               <h3 className={styles.cardTitle}>
                 <Clock size={18} className="text-green-600" /> Histórico de
                 Visitas Técnicas
               </h3>
 
               {/* Formulário de Adição */}
-              <form
-                onSubmit={adicionarVisita}
-                className={styles.visitaForm}
-              >
+              <form onSubmit={adicionarVisita} className={styles.visitaForm}>
                 <div className={styles.visitaFormTitle}>
                   <Plus size={16} className="text-green-600" /> Nova Visita
                 </div>
@@ -745,10 +737,7 @@ export default function Dados() {
                   />
                 </div>
                 <div className="flex justify-end">
-                  <button
-                    type="submit"
-                    className={styles.visitaAddButton}
-                  >
+                  <button type="submit" className={styles.visitaAddButton}>
                     <Plus size={16} /> Adicionar
                   </button>
                 </div>
@@ -769,27 +758,49 @@ export default function Dados() {
                           <input
                             type="date"
                             value={editedVisita.data}
-                            onChange={(e) => setEditedVisita({ ...editedVisita, data: e.target.value })}
+                            onChange={(e) =>
+                              setEditedVisita({
+                                ...editedVisita,
+                                data: e.target.value,
+                              })
+                            }
                             className={styles.visitaInput}
                           />
                           <input
                             type="time"
                             value={editedVisita.hora}
-                            onChange={(e) => setEditedVisita({ ...editedVisita, hora: e.target.value })}
+                            onChange={(e) =>
+                              setEditedVisita({
+                                ...editedVisita,
+                                hora: e.target.value,
+                              })
+                            }
                             className={styles.visitaInput}
                           />
                         </div>
                         <textarea
                           value={editedVisita.registro}
-                          onChange={(e) => setEditedVisita({ ...editedVisita, registro: e.target.value })}
+                          onChange={(e) =>
+                            setEditedVisita({
+                              ...editedVisita,
+                              registro: e.target.value,
+                            })
+                          }
                           className={`${styles.visitaInput} ${styles.visitaTextarea}`}
                           rows="3"
                         />
                         <div className={styles.visitaEditActions}>
-                          <button onClick={handleCancelEditVisita} className={styles.visitaCancelButton}>
+                          <button
+                            onClick={handleCancelEditVisita}
+                            className={styles.visitaCancelButton}
+                          >
                             Cancelar
                           </button>
-                          <button onClick={() => handleSaveEditVisita(v.id)} className={styles.visitaSaveButton} title="Salvar alterações da visita">
+                          <button
+                            onClick={() => handleSaveEditVisita(v.id)}
+                            className={styles.visitaSaveButton}
+                            title="Salvar alterações da visita"
+                          >
                             <Save size={16} /> Salvar
                           </button>
                         </div>
@@ -811,15 +822,23 @@ export default function Dados() {
                           </p>
                         </div>
                         <div className={styles.visitaActions}>
-                          <button onClick={() => handleStartEditVisita(v)} className={styles.visitaActionButton} title="Editar visita">
+                          <button
+                            onClick={() => handleStartEditVisita(v)}
+                            className={styles.visitaActionButton}
+                            title="Editar visita"
+                          >
                             <Edit size={16} />
                           </button>
-                          <button onClick={() => handleDeleteVisita(v.id)} className={`${styles.visitaActionButton} ${styles.visitaDeleteAction}`} title="Remover visita">
+                          <button
+                            onClick={() => handleDeleteVisita(v.id)}
+                            className={`${styles.visitaActionButton} ${styles.visitaDeleteAction}`}
+                            title="Remover visita"
+                          >
                             <Trash2 size={16} />
                           </button>
                         </div>
                       </div>
-                    )
+                    ),
                   )
                 )}
               </div>
@@ -836,13 +855,15 @@ export default function Dados() {
             <div className="space-y-4">
               {/* ÁREA DA FOTO DO LOCAL */}
               <div>
-                <span className={`${styles.label} mb-2 block`}>Foto do Local</span>
+                <span className={`${styles.label} mb-2 block`}>
+                  Foto do Local
+                </span>
                 <div className="relative w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border border-gray-200 group">
                   {!imageError ? (
                     <img
                       src={`${apiUrl}/api/ocorrencias/${id || 1}/foto?t=${fotoTimestamp}`}
                       alt="Evidência do Local"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                       onError={() => setImageError(true)}
                     />
                   ) : (

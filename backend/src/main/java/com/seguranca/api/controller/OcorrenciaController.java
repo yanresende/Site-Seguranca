@@ -67,6 +67,7 @@ public class OcorrenciaController {
                     existingOcorrencia.setCidade(ocorrenciaDetails.getCidade());
                     existingOcorrencia.setUf(ocorrenciaDetails.getUf());
                     existingOcorrencia.setCep(ocorrenciaDetails.getCep());
+                    existingOcorrencia.setReferencia(ocorrenciaDetails.getReferencia());
                     existingOcorrencia.setDataAcionamento(ocorrenciaDetails.getDataAcionamento());
                     existingOcorrencia.setHoraAcionamento(ocorrenciaDetails.getHoraAcionamento());
                     existingOcorrencia.setDataVandalismo(ocorrenciaDetails.getDataVandalismo());

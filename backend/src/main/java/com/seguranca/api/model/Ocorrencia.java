@@ -22,6 +22,7 @@ public class Ocorrencia {
     private String uf;
     private String numero;
     private String cep;
+    private String referencia;
 
     @Column(name = "dataAcionamento")
     private LocalDate dataAcionamento;
@@ -142,6 +143,10 @@ public class Ocorrencia {
         this.observacoes = observacoes;
     }
 
+    public void setReferencia(String referencia) {
+        this.referencia = referencia;
+    }
+
     // ===== GETTERS (exemplo básico) =====
 
     public Long getId() {
@@ -206,6 +211,10 @@ public class Ocorrencia {
 
     public String getObservacoes() {
         return observacoes;
+    }
+
+    public String getReferencia() {
+        return referencia;
     }
 
     public List<Visita> getVisitas() {

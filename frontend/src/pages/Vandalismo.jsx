@@ -8,6 +8,7 @@ import {
   Settings,
   Trash2,
   ExternalLink,
+  FileText,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import api from "../services/api"; // Importe o seu serviço
@@ -28,7 +29,7 @@ export default function Vandalismo() {
     const params = new URLSearchParams({
       page: page,
       size: 10, // 10 itens por página
-      sort: 'dataAcionamento,desc', // Ordena por data, mais recentes primeiro
+      sort: 'dataVandalismo,desc', // Ordena por data, mais recentes primeiro
       searchTerm: searchTerm,
       status: statusFilter,
     });
@@ -114,24 +115,23 @@ export default function Vandalismo() {
             <thead className={styles.tableHeader}>
               <tr>
                 <th className="px-6 py-4">Local</th>
-                <th className="px-6 py-4">Data Acionamento</th>
+                <th className="px-6 py-4">Data Vandalismo</th>
                 <th className="px-6 py-4">Observações</th>
                 <th className="px-6 py-4">Fonte</th>
-                <th className="px-6 py-4">Drive</th>
-                <th className="px-6 py-4 text-center">Ações</th>
+                <th className="px-6 py-4">Ver Dados</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {loading && (
                 <tr>
-                  <td colSpan="6" className={styles.loadingText}>
+                  <td colSpan="5" className={styles.loadingText}>
                     Carregando...
                   </td>
                 </tr>
               )}
               {error && (
                 <tr>
-                  <td colSpan="6" className={styles.errorText}>
+                  <td colSpan="5" className={styles.errorText}>
                     {error}
                   </td>
                 </tr>
@@ -173,8 +173,6 @@ export default function Vandalismo() {
 
 function VandalismoRow({ ocorrencia }) {
   const navigate = useNavigate();
-  const [menuAberto, setMenuAberto] = useState(false);
-  const menuRef = useRef(null);
 
   const statusColors = {
     "Concluido": "text-green-600 bg-green-50 hover:bg-green-100",
@@ -183,19 +181,10 @@ function VandalismoRow({ ocorrencia }) {
     "Pendente": "text-red-600 bg-red-50 hover:bg-red-100",
   };
 
-  // Fecha o menu se o usuário clicar fora dele
-  useEffect(() => {
-    function handleClickFora(event) {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuAberto(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickFora);
-    return () => document.removeEventListener("mousedown", handleClickFora);
-  }, []);
-
   // Format date and time
-  const dataFormatada = `${ocorrencia.dataAcionamento.split("-").reverse().join("/")} - ${ocorrencia.horaAcionamento}`;
+  const dataFormatada = ocorrencia.dataVandalismo
+    ? `${ocorrencia.dataVandalismo.split("-").reverse().join("/")} - ${ocorrencia.horaQueda || ''}`
+    : "N/A";
   const status = ocorrencia.status || "Pendente";
 
   return (
@@ -210,7 +199,7 @@ function VandalismoRow({ ocorrencia }) {
             />
           </div>
           <div>
-            <div className="font-bold text-gray-700">{`${ocorrencia.rua}, ${ocorrencia.numero}`}</div>
+            <div className="font-bold text-gray-700">{`${ocorrencia.rua}, ${ocorrencia.numero} - ${ocorrencia.bairro}`}</div>
             <div className={`text-xs font-medium px-2 py-1 rounded transition ${statusColors[status] || "text-gray-600 bg-gray-50"}`}>
               {status}
             </div>
@@ -223,41 +212,12 @@ function VandalismoRow({ ocorrencia }) {
       </td>
       <td className="px-6 py-4 text-sm text-gray-500">{ocorrencia.fonte}</td>
       <td className="px-6 py-4 text-sm text-gray-500">
-        {ocorrencia.fotografico ? (
-          <a
-            href={ocorrencia.fotografico}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline flex items-center gap-1"
-          >
-            <ExternalLink size={14} /> Abrir
-          </a>
-        ) : (
-          <span className="text-gray-400">-</span>
-        )}
-      </td>
-
-
-      {/* BOTÃO DE AÇÃO COM MENU DROP DOWN */}
-      <td className="px-6 py-4 text-center relative" ref={menuRef}>
         <button
-          onClick={() => setMenuAberto(!menuAberto)}
-          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition"
+          onClick={() => navigate(`/vandalismo/dados/${ocorrencia.id}`)}
+          className="text-blue-600 hover:underline flex items-center gap-1"
         >
-          <MoreHorizontal size={20} />
+          <FileText size={14} /> Ver Dados
         </button>
-
-        {menuAberto && (
-          <div className="absolute right-6 top-12 w-48 bg-white rounded-xl shadow-xl border border-gray-100 z-50 py-2 animate-in fade-in zoom-in duration-200">
-            <button
-              onClick={() => navigate(`/vandalismo/dados/${ocorrencia.id}`)}
-              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2"
-            >
-              <FileWarning size={16} /> Ver Dados
-            </button>
-
-          </div>
-        )}
       </td>
     </tr>
   );

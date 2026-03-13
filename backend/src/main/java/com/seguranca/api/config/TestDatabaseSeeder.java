@@ -27,6 +27,7 @@ public class TestDatabaseSeeder {
                 ocorrencia.setCidade("São Paulo");
                 ocorrencia.setUf("SP");
                 ocorrencia.setCep("01310-100");
+                ocorrencia.setReferencia("Próximo ao MASP");
                 ocorrencia.setDataAcionamento(LocalDate.now());
                 ocorrencia.setHoraAcionamento(LocalTime.now());
                 ocorrencia.setFilmagem("Sim");
@@ -41,6 +42,7 @@ public class TestDatabaseSeeder {
                 ocorrencia2.setCidade("São Paulo");
                 ocorrencia2.setUf("SP");
                 ocorrencia2.setCep("01310-100");
+                ocorrencia2.setReferencia("Em frente ao Parque Trianon");
                 ocorrencia2.setDataAcionamento(LocalDate.now());
                 ocorrencia2.setHoraAcionamento(LocalTime.now());
                 ocorrencia2.setFilmagem("Sim");
